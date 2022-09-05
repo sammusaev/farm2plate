@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using farm2plate.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace farm2plate
 {
