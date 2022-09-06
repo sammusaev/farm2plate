@@ -47,6 +47,9 @@ namespace farm2plate.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            public UserType UserType { get; set; }
+
+            [Required]
             [StringLength(200, ErrorMessage = "A first name can't be greater than 200 characters")]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
@@ -96,6 +99,7 @@ namespace farm2plate.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, Input.UserType.ToString());
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                 }

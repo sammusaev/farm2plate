@@ -15,7 +15,8 @@ namespace farm2plate.Areas.Identity.Data
         public string LastName { get; set; }
     }
 
-    public enum UserTypes
+    // Used for dropdown list during registration
+    public enum UserType
     {
         Vendor, 
         Customer
