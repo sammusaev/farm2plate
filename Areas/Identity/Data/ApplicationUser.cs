@@ -15,7 +15,7 @@ namespace farm2plate.Areas.Identity.Data
         public string LastName { get; set; }
     }
 
-    public enum static UserTypes
+    public enum UserTypes
     {
         Vendor, 
         Customer
