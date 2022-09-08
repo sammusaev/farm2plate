@@ -1,10 +1,13 @@
-﻿using farm2plate.Models;
+﻿using farm2plate.Areas.Identity.Data;
+using farm2plate.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 
 namespace farm2plate.Controllers
@@ -12,14 +15,42 @@ namespace farm2plate.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController
+            (ILogger<HomeController> logger, 
+            SignInManager<ApplicationUser> signInManager,
+            Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
+            this.signInManager = signInManager;
+            this.userManager = userManager;
+
         }
 
-        public IActionResult Index()
+        // Consider moving this somewhere else
+        // Login essentially calls the same logic
+        private async Task<string> getRoleRedirect()
         {
+            var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
+            var roles = await userManager.GetRolesAsync(user);
+            if (roles.Contains("Admin"))
+            {
+                return "/admin";
+            }
+            else if (roles.Contains("Vendor")){
+                return "/vendor";
+            }
+            return "/customer";
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            if (signInManager.IsSignedIn(User))
+            {
+                return LocalRedirect(await getRoleRedirect());
+            }
             return View();
         }
 
