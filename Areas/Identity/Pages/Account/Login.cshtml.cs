@@ -84,7 +84,17 @@ namespace farm2plate.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    if (roles.Contains("Admin"))
+                    {
+                        return LocalRedirect("/admin");
+                    } 
+                    else if (roles.Contains("Vendor"))
+                    {
+                        return LocalRedirect("/vendor");
+                    }
+                    return LocalRedirect("/customer");
                 }
                 if (result.RequiresTwoFactor)
                 {
