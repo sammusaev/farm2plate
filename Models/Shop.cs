@@ -10,6 +10,7 @@ namespace farm2plate.Models
 {
     public class Shop
     {
+        [Required]
         public int ID { get; set; }
 
         [Required]
@@ -19,6 +20,9 @@ namespace farm2plate.Models
         [Required]
         public string UserID { get; set; }
         [ForeignKey("UserID")]
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+
+        public ICollection<Product> Products { get; set; }
+        public ICollection<Order> Order { get; set; }
     }
 }

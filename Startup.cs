@@ -99,7 +99,6 @@ namespace farm2plate
             IServiceProvider serviceProvider,
             ApplicationDbContext context)
         {
-            context.Database.Migrate();
 
             if (env.IsDevelopment())
             {

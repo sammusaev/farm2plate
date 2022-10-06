@@ -1,4 +1,6 @@
-﻿@*
+﻿@model farm2plate.Models.Shop;
+@*
+
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -6,3 +8,22 @@
 }
 
 <h1>Customer is here</h1>
+
+
+
+@{ 
+    var shops = ViewBag.Shops;
+    foreach(Shop s in shops)
+    {
+                <h1>@s.Name</h1>
+                <form asp-action="ViewShop" asp-controller="Customer" method="get">
+                    <input type="submit" asp-for="ID" value="@s.ID"/>
+                </form>
+    }
+
+    //card for s
+    // clicks asp-rooute s.Id
+    // shops/:id
+}
+
+

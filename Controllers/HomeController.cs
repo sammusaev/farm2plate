@@ -36,7 +36,6 @@ namespace farm2plate.Controllers
         // Login essentially calls the same logic
         private async Task<string> getRoleRedirect()
         {
-            Console.Write("I hope u can see me");
             var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
             var roles = await userManager.GetRolesAsync(user);
             if (roles.Contains("Admin"))
@@ -55,11 +54,11 @@ namespace farm2plate.Controllers
             {
                 var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
                 await context.Entry(user).Collection(x => x.Shops).LoadAsync();
-                Console.Write("Skippity bappity boo. I got a shop for you ", user.Shops);
                 return LocalRedirect(await getRoleRedirect());
             }
             return View();
         }
+
 
         public IActionResult Privacy()
         {
