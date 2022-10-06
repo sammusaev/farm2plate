@@ -17,22 +17,26 @@ namespace farm2plate.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager;
+        private readonly ApplicationDbContext context;
 
         public HomeController
             (ILogger<HomeController> logger, 
             SignInManager<ApplicationUser> signInManager,
-            Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager)
+            Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager,
+            ApplicationDbContext context
+            )
         {
             _logger = logger;
             this.signInManager = signInManager;
             this.userManager = userManager;
-
+            this.context = context;
         }
 
         // Consider moving this somewhere else
         // Login essentially calls the same logic
         private async Task<string> getRoleRedirect()
         {
+            Console.Write("I hope u can see me");
             var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
             var roles = await userManager.GetRolesAsync(user);
             if (roles.Contains("Admin"))
@@ -49,6 +53,9 @@ namespace farm2plate.Controllers
         {
             if (signInManager.IsSignedIn(User))
             {
+                var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
+                await context.Entry(user).Collection(x => x.Shops).LoadAsync();
+                Console.Write("Skippity bappity boo. I got a shop for you ", user.Shops);
                 return LocalRedirect(await getRoleRedirect());
             }
             return View();

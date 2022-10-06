@@ -36,6 +36,7 @@ namespace farm2plate.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
         }
+        
 
         [BindProperty]
         public InputModel Input { get; set; }

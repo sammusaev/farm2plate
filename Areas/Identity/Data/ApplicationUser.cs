@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using farm2plate.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace farm2plate.Areas.Identity.Data
@@ -13,6 +14,7 @@ namespace farm2plate.Areas.Identity.Data
         public string FirstName { get; set; }
         [PersonalData]
         public string LastName { get; set; }
+        public virtual ICollection<Shop> Shops { get; set; }
     }
 
     // Used for dropdown list during registration
