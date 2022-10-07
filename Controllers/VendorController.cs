@@ -14,18 +14,19 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using farm2plate.AWServices;
 using Microsoft.AspNetCore.Http;
+using MANCI = Microsoft.AspNetCore.Identity;
 
 namespace farm2plate.Controllers
 {
     [Authorize(Roles="Vendor")]
     public class VendorController : Controller
     {
-        private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
+        private readonly MANCI.UserManager<ApplicationUser> _userManager;
         private ApplicationUser _user;
         private readonly ApplicationDbContext _context;
         
      
-        public VendorController(Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager, ApplicationDbContext context) {
+        public VendorController(MANCI.UserManager<ApplicationUser> userManager, ApplicationDbContext context) {
             _userManager = userManager;
             _context = context;
         }
@@ -46,7 +47,7 @@ namespace farm2plate.Controllers
         }
        
         [HttpPost]
-        public async Task<IActionResult>createShop([Bind("ShopName")] Shop shop)
+        public async Task<IActionResult> CreateShop([Bind("ShopName")] Shop shop)
         {
             shop.UserID = await GetUserID();
             try {
@@ -55,6 +56,7 @@ namespace farm2plate.Controllers
                 return RedirectToAction("Index", "Vendor");
             } 
             catch (Exception ex) {
+                // TODO - Redirect to error page
                 return RedirectToAction("Index", "Vendor");
             } 
         }

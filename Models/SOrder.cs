@@ -17,17 +17,19 @@ namespace farm2plate.Models
         public int ProductQuantity { get; set; }
 
         [Required]
-        public int ProductID { get; set; }
         [ForeignKey("ProductID")]
+        public int ProductID { get; set; }
         public Product Product { get; set; }
 
-        public string? UserID { get; set; }
+        #nullable enable
         [ForeignKey("UserID")]
-        public ApplicationUser ApplicationUser { get; set; }
+        public string? UserID { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
 
-        public int? ShopID { get; set; }
+        #nullable enable
         [ForeignKey("ShopID")]
-        public Shop Shop { get; set; }
+        public int? ShopID { get; set; }
+        public Shop? Shop { get; set; }
         
         [Required]
         public Status SOrderStatus { get; set; }
