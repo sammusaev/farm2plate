@@ -18,7 +18,8 @@
     <div>
         <h1>@s.ShopName</h1>
         <form asp-action="ViewShop" asp-controller="Customer" method="get">
-            <input type="submit" asp-for="ShopID" value="@s.ShopID" />
+            <input type="hidden" asp-for="ShopID" value="@s.ShopID" />
+            <input type="submit" value="Visit Shop" />
         </form>
     </div>
     }

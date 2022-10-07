@@ -19,7 +19,7 @@
             <p>ProductID @product.ProductID</p>
             <p>ProductName @product.ProductName</p>
             <p>ProductImage @product.ProductImage</p>
-            <p>ProductPrice @product.ProductPrice</p>
+            <p>ProductPrice: RM @product.ProductPrice</p>
             if (@product.ProductQuantity > 0)
             {
                 <form method="post" asp-action="Order" asp-controller="Customer">

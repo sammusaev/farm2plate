@@ -43,8 +43,13 @@ namespace farm2plate.Controllers
             System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} UserID {user.Id}");
 
             _context.SOrder.Add(sorder);
-            await _context.SaveChangesAsync();
-            System.Diagnostics.Debug.WriteLine($"Product Name {product.ProductName}");
+
+            product.ProductQuantity = (int)(product.ProductQuantity - ProductQuantity);
+
+             await _context.SaveChangesAsync();
+
+
+            //System.Diagnostics.Debug.WriteLine($"Product Name {product.ProductName}");
             return View(); // order page
         }
 
@@ -54,5 +59,15 @@ namespace farm2plate.Controllers
             ViewBag.Shops = shops;
             return View();
         }
-     }
+
+        /*public LocalRedirectResult LocalRedirect()
+        {
+            return LocalRedirect("/customer");
+        }*/ // same as RedirectCustomerHome
+
+        public RedirectToActionResult RedirectCustomerHome()
+        {
+            return RedirectToAction("Index", "Customer");
+        }
+    }
 }

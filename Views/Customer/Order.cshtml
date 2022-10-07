@@ -3,5 +3,13 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    <h1>hi SORDER</h1>
+    <h1>Your Order has been placed</h1>
+    <h2>Seller has been notified. (Order Status: In Progress)</h2>
+    <form asp-action="RedirectCustomerHome" asp-controller="Customer" method="get">
+        <input type="submit" value="Confirm and Return Home"/>
+    </form>
+    <p>Shop Name</p>
+    <p>Product Name</p>
+    <p>Product Quantity</p>
+    <p>Total Price</p>
 }
