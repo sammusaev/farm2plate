@@ -27,7 +27,7 @@ namespace farm2plate.Models
 
         [Required]
         [Display(Name="Quantity Left (kg)")]
-        public int ProductQuantity { get; set; }
+        public double ProductQuantity { get; set; }
 
         [Required]
         public int ShopID { get; set; }

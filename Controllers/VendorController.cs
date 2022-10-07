@@ -62,7 +62,7 @@ namespace farm2plate.Controllers
         }
         
         [HttpPost("create")]
-        public async Task<IActionResult> UploadNewProduct(IFormFile ProductImage, [Bind("ProductName", "ProductPrice", "unitsLeft")] Product product)
+        public async Task<IActionResult> UploadNewProduct(IFormFile ProductImage, [Bind("ProductName", "ProductPrice", "ProductQuantity")] Product product)
         {
             product.ShopID = await GetShopID();
             S3Service service = new S3Service();
