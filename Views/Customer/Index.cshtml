@@ -15,10 +15,12 @@
     var shops = ViewBag.Shops;
     foreach(Shop s in shops)
     {
-                <h1>@s.Name</h1>
-                <form asp-action="ViewShop" asp-controller="Customer" method="get">
-                    <input type="submit" asp-for="ShopID" value="@s.ShopID"/>
-                </form>
+    <div>
+        <h1>@s.Name</h1>
+        <form asp-action="ViewShop" asp-controller="Customer" method="get">
+            <input type="submit" asp-for="ShopID" value="@s.ShopID" />
+        </form>
+    </div>
     }
 
     //card for s

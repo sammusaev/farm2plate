@@ -13,6 +13,8 @@ namespace farm2plate.Areas.Identity.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<Shop> Shops { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<SOrder> SOrder { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

@@ -24,12 +24,25 @@ namespace farm2plate.Controllers
 
         public async Task<IActionResult> ViewShop(int? ShopID)
         {
-            System.Diagnostics.Debug.WriteLine($"Shop {ShopID}");
+            System.Diagnostics.Debug.WriteLine($"Shop ID {ShopID}");
             var shop = await _context.Shops.FindAsync(ShopID);
+            System.Diagnostics.Debug.WriteLine($"Just Shop {shop}");
             await _context.Entry(shop).Collection(x => x.Products).LoadAsync();
-            System.Diagnostics.Debug.WriteLine($"Shop {shop.Name}");
+            System.Diagnostics.Debug.WriteLine($"Shop Name {shop.Name}");
             return View(shop);
             //return RedirectToAction("Index", "FlowerList");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Order([Bind("ProductQuantity")] SOrder sorder, int? ProductQuantity, int? ProductId)
+        {
+           System.Diagnostics.Debug.WriteLine($"ProductQuantity {ProductQuantity}");
+            var product = await _context.Products.FindAsync(ProductId);
+            System.Diagnostics.Debug.WriteLine($"product {product}");
+            //_context.SOrder.Add(product);
+            //await _context.SaveChangesAsync();
+            System.Diagnostics.Debug.WriteLine($"Product Name {product.ProductName}");
+            return View(); // order page
         }
 
         public async Task<IActionResult> Index()

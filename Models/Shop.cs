@@ -23,6 +23,6 @@ namespace farm2plate.Models
         public ApplicationUser ApplicationUser { get; set; }
 
         public ICollection<Product> Products { get; set; }
-        //public ICollection<Order> Order { get; set; }
+        public ICollection<SOrder> SOrders { get; set; }
     }
 }

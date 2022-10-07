@@ -14,9 +14,22 @@
     }
     else
     {
-        foreach (var p in Model.Products)
+        foreach (var product in Model.Products)
         {
-            <p>there is one</p>
+            <p>ProductID @product.ProductID</p>
+            <p>ProductName @product.ProductName</p>
+            <p>ProductImage @product.ProductImage</p>
+            <p>ProductPrice @product.ProductPrice</p>
+            if (@product.unitsLeft > 0)
+            {
+                <form method="post" asp-action="Order" asp-controller="Customer">
+                    <input type="hidden" name="ProductId" value="@product.ProductID" />
+                    <input type="number" name="ProductQuantity" min="1" value="1" max="@product.unitsLeft" placeholder="1" />
+                    <input type="submit" value="Place Order" />
+                </form>
+            }
+            else
+            {<p>This product is not available</p>}
         }
     }
 
