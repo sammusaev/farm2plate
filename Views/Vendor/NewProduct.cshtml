@@ -7,7 +7,7 @@
 
 <h1> Hellooooaaao </h1>
 
-<form>
+<form enctype="multipart/form-data" method="post" asp-action="UploadNewProduct">
     <table border="0">
         <tr>
             <th>
@@ -42,7 +42,7 @@
                 <label asp-for="ProductImage"></label>
             </th>
             <td>
-                <input asp-for="ProductImage" type="file" accept="image/*" />
+                <input name="ProductImage" type="file" accept="image/*" />
             </td>
         </tr>
         <tr> <th> <td> <input type="submit" value="Add Product" /> </td></th></tr>

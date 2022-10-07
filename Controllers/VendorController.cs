@@ -12,6 +12,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using farm2plate.AWServices;
+using Microsoft.AspNetCore.Http;
 
 namespace farm2plate.Controllers
 {
@@ -39,6 +41,13 @@ namespace farm2plate.Controllers
             var user = await GetUser();
             return user.Id;
         }
+
+        public async Task<int> GetShopID()
+        {
+            _user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            await _context.Entry(_user).Collection(x => x.Shops).LoadAsync();
+            return _user.Shops.First().ShopID;
+        }
        
         [HttpPost]
         public async Task<IActionResult>createShop([Bind("Name")] Shop shop)
@@ -54,12 +63,30 @@ namespace farm2plate.Controllers
             } 
         }
 
-        public ActionResult NewProduct()
+        public IActionResult NewProduct()
         {
-            var value = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
-            System.Diagnostics.Debug.WriteLine($"AWS_ACCESS_KEY is {value}");
             return View();
         }
+
+        
+        [HttpPost("create")]
+        public async Task<IActionResult> UploadNewProduct(IFormFile ProductImage, [Bind("ProductName", "ProductPrice", "unitsLeft")] Product product)
+        {
+            product.ShopID = await GetShopID();
+            S3Service service = new S3Service();
+            (bool, string) imgResp = await service.UploadToBucket(ProductImage);
+            if (imgResp.Item1 == true)
+            {
+                product.ProductImage = imgResp.Item2;
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Vendor");
+            } else
+            {
+                return RedirectToAction("Index", "Vendor");
+            }
+        }
+        
         
         public async Task<IActionResult> Index()
         {
