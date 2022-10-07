@@ -24,7 +24,7 @@
             </th>
 
             <td>
-                <input asp-for="ProductPrice" type="number" placeholder="In RM" />
+                <input asp-for="ProductPrice" type="number" placeholder="In RM" step=".01" />
             </td>
         </tr>
 
@@ -33,9 +33,10 @@
                 <label asp-for="unitsLeft"></label>
             </th>
             <td>
-                <input asp-for="unitsLeft" type="number" placeholder="In KG" />
+                <input asp-for="unitsLeft" type="number" placeholder="In KG" step=".01"/>
             </td>
         </tr>
+
         <tr>
             <th>
                 <label asp-for="ProductImage"></label>
@@ -44,7 +45,6 @@
                 <input asp-for="ProductImage" type="file" accept="image/*" />
             </td>
         </tr>
-        <br /><br />
-            <input type="submit" value="Add Product" />
+        <tr> <th> <td> <input type="submit" value="Add Product" /> </td></th></tr>
     </table>
 </form>
