@@ -13,6 +13,10 @@ namespace farm2plate
     {
         public static void Main(string[] args)
         {
+            DotEnv.LoadDotEnv();
+            new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .Build();
             CreateHostBuilder(args).Build().Run();
         }
 

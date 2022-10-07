@@ -28,7 +28,6 @@ namespace farm2plate.Controllers
             _userManager = userManager;
             _context = context;
         }
-
         
         public async Task<ApplicationUser> GetUser()
         {
@@ -57,6 +56,8 @@ namespace farm2plate.Controllers
 
         public ActionResult NewProduct()
         {
+            var value = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
+            System.Diagnostics.Debug.WriteLine($"AWS_ACCESS_KEY is {value}");
             return View();
         }
         
