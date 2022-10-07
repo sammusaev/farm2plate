@@ -1,28 +1,25 @@
-﻿@model farm2plate.Models.Shop
-@*
-
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model farm2plate.Models.Shop;
 @{
     ViewData["Title"] = "Vendor Home";
 }
 
 @{
-    var Shop = ViewBag.Shop;
     var HasShop = ViewBag.HasShop;
     if (!HasShop)
     {
         <div>
             <p> You don't have a shop set up yet :(</p>
-            <form asp-action="createShop" method="post" asp-controller="Vendor"> 
-                <input type="text" id="txtName" name="ShopName" placeholder="Shop Name"/>
-                <input type="submit" value="Create Shop"/>
+            <form asp-action="createShop" method="post" asp-controller="Vendor">
+                <input type="text" id="txtName" name="ShopName" placeholder="Shop Name" />
+                <input type="submit" value="Create Shop" />
             </form>
         </div>
     }
 
     else
     {
+        var Shop = ViewBag.Shop;
+        var Products = ViewBag.Products;
         <h1> @Shop.ShopName </h1>
         <tr>
             <td>
@@ -31,5 +28,29 @@
             </td>
         </tr>
 
+        <h1> Products </h1>
+        @foreach (Product p in Products)
+        {
+            string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@p.ProductImage}";
+            <div>
+                <div class="card">
+                    <center>
+                        <img src="@ImageURL" width="200" height="200" /> </center>
+                        <h3> @p.ProductName  </h3>
+                        <p> RM @p.ProductPrice /kg</p>
+                        <p> @p.ProductQuantity kg remaining</p>
+                </div>
+            </div>
+        }
+
     }
 }
+
+<style>
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 16px;
+        text-align: center;
+        background-color: #f1f1f1;
+    }
+</style>

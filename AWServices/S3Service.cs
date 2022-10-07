@@ -27,6 +27,11 @@ namespace farm2plate.AWServices
             S3Region = S3Region.USEast1;
             // Init client
             S3Client = new AmazonS3Client(ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN, RERegion);
+
+            if (!DoesBucketExist().Result) {
+                CreateBucketAsync().Wait();
+            };
+
         }
 
         public async Task<List<S3Bucket>> GetBuckets() {

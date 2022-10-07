@@ -55,7 +55,7 @@ namespace farm2plate.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Vendor");
             } 
-            catch (Exception ex) {
+            catch (Exception) {
                 // TODO - Redirect to error page
                 return RedirectToAction("Index", "Vendor");
             } 
@@ -97,7 +97,13 @@ namespace farm2plate.Controllers
             if (shopCount==0)
                 ViewBag.hasShop = false;
             else
-                ViewBag.Shop = _user.Shops.First();
+            {
+                var _shop = _user.Shops.First();
+                ViewBag.Shop = _shop;
+                ViewBag.BucketName = Environment.GetEnvironmentVariable("AWS_IMAGE_BUCKET_NAME");
+                await _context.Entry(_shop).Collection(x => x.Products).LoadAsync();
+                ViewBag.Products = _shop.Products;
+            }
             return View();
         }
     }
