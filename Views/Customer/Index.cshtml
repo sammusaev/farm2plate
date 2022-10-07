@@ -16,7 +16,7 @@
     foreach(Shop s in shops)
     {
     <div>
-        <h1>@s.Name</h1>
+        <h1>@s.ShopName</h1>
         <form asp-action="ViewShop" asp-controller="Customer" method="get">
             <input type="submit" asp-for="ShopID" value="@s.ShopID" />
         </form>

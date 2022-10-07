@@ -39,5 +39,6 @@ public enum Status
 {
     IN_PROGRESS,
     IN_TRANSIT,
-    RECEIVED
+    RECEIVED,
+    CANCELLED
 }

@@ -46,7 +46,8 @@ namespace farm2plate.Controllers
         }
        
         [HttpPost]
-        public async Task<IActionResult> CreateShop([Bind("Name")] Shop shop) {
+        public async Task<IActionResult>createShop([Bind("ShopName")] Shop shop)
+        {
             shop.UserID = await GetUserID();
             try {
                 _context.Shops.Add(shop);
