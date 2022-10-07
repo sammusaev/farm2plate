@@ -15,7 +15,7 @@
         <div>
             <p> You don't have a shop set up yet :(</p>
             <form asp-action="createShop" method="post" asp-controller="Vendor"> 
-                <input type="text" id="txtName" name="Name" placeholder="Shop Name"/>
+                <input type="text" id="txtName" name="ShopName" placeholder="Shop Name"/>
                 <input type="submit" value="Create Shop"/>
             </form>
         </div>
@@ -23,7 +23,7 @@
 
     else
     {
-        <h1> @Shop.Name </h1>
+        <h1> @Shop.ShopName </h1>
         <tr>
             <td>
                 <a asp-action="NewProduct" asp-controller="Vendor"> Add Product </a>

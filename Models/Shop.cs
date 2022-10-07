@@ -14,7 +14,7 @@ namespace farm2plate.Models
         public int ShopID { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string ShopName { get; set; }
 
         // https://stackoverflow.com/questions/60062443/identity-user-fk
         [Required]
