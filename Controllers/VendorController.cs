@@ -25,33 +25,28 @@ namespace farm2plate.Controllers
         private readonly ApplicationDbContext _context;
         
      
-        public VendorController(Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager, ApplicationDbContext context)
-        {
+        public VendorController(Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager, ApplicationDbContext context) {
             _userManager = userManager;
             _context = context;
         }
         
-        public async Task<ApplicationUser> GetUser()
-        {
+        public async Task<ApplicationUser> GetUser() {
             return await _userManager.FindByIdAsync(User.Identity.GetUserId());
         }
 
-        public async Task<string> GetUserID()
-        {
+        public async Task<string> GetUserID() {
             var user = await GetUser();
             return user.Id;
         }
 
-        public async Task<int> GetShopID()
-        {
+        public async Task<int> GetShopID() {
             _user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
             await _context.Entry(_user).Collection(x => x.Shops).LoadAsync();
             return _user.Shops.First().ShopID;
         }
        
         [HttpPost]
-        public async Task<IActionResult>createShop([Bind("Name")] Shop shop)
-        {
+        public async Task<IActionResult> CreateShop([Bind("Name")] Shop shop) {
             shop.UserID = await GetUserID();
             try {
                 _context.Shops.Add(shop);
@@ -62,18 +57,13 @@ namespace farm2plate.Controllers
                 return RedirectToAction("Index", "Vendor");
             } 
         }
-
-        public IActionResult NewProduct()
-        {
-            return View();
-        }
-
         
         [HttpPost("create")]
         public async Task<IActionResult> UploadNewProduct(IFormFile ProductImage, [Bind("ProductName", "ProductPrice", "unitsLeft")] Product product)
         {
             product.ShopID = await GetShopID();
             S3Service service = new S3Service();
+            // Returns (upload result, errormsg/URL)
             (bool, string) imgResp = await service.UploadToBucket(ProductImage);
             if (imgResp.Item1 == true)
             {
@@ -83,28 +73,29 @@ namespace farm2plate.Controllers
                 return RedirectToAction("Index", "Vendor");
             } else
             {
+                // TODO - Handle Error (redirect to error page?)
                 return RedirectToAction("Index", "Vendor");
             }
         }
-        
-        
-        public async Task<IActionResult> Index()
-        {
+
+
+        // Page Views
+        public IActionResult NewProduct() {
+            return View();
+        }
+
+        public async Task<IActionResult> Index() {
+            // Get user, load Shop(s) into collection
             _user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
             await _context.Entry(_user).Collection(x => x.Shops).LoadAsync();
-            System.Diagnostics.Debug.WriteLine($"SHOPS {_user.Shops.Count}");
+            // Add Shop(s) to ViewBag if exist
             var shopCount = _user.Shops.Count;
+            ViewBag.hasShop = true;
             if (shopCount==0)
-            {
                 ViewBag.hasShop = false;
-                return View();
-            } else
-            {
-                ViewBag.hasShop = true;
+            else
                 ViewBag.Shop = _user.Shops.First();
-                return View();
-            }
-           
+            return View();
         }
     }
 }
