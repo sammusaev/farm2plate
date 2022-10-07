@@ -11,7 +11,7 @@ namespace farm2plate.Models
     public class Shop
     {
         [Required]
-        public int ID { get; set; }
+        public int ShopID { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -23,6 +23,6 @@ namespace farm2plate.Models
         public ApplicationUser ApplicationUser { get; set; }
 
         public ICollection<Product> Products { get; set; }
-        public ICollection<Order> Order { get; set; }
+        //public ICollection<Order> Order { get; set; }
     }
 }

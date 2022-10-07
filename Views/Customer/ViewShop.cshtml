@@ -8,4 +8,18 @@
 <h1> Hey </h1>
 @{
     <h1> @Model.Name</h1>
+    if (Model.Products.Count == 0)
+    {
+        <p>there are no products</p>
+    }
+    else
+    {
+        foreach (var p in Model.Products)
+        {
+            <p>there is one</p>
+        }
+    }
+
+
+
 }

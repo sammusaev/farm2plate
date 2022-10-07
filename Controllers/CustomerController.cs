@@ -22,10 +22,11 @@ namespace farm2plate.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> ViewShop(int ?ID)
+        public async Task<IActionResult> ViewShop(int? ShopID)
         {
-            System.Diagnostics.Debug.WriteLine($"Shop {ID}");
-            var shop = await _context.Shops.FindAsync(ID);
+            System.Diagnostics.Debug.WriteLine($"Shop {ShopID}");
+            var shop = await _context.Shops.FindAsync(ShopID);
+            await _context.Entry(shop).Collection(x => x.Products).LoadAsync();
             System.Diagnostics.Debug.WriteLine($"Shop {shop.Name}");
             return View(shop);
             //return RedirectToAction("Index", "FlowerList");

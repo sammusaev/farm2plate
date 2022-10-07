@@ -15,7 +15,7 @@ namespace farm2plate.Areas.Identity.Data
         [PersonalData]
         public string LastName { get; set; }
         public ICollection<Shop> Shops { get; set; } // For Vendors
-        public ICollection<Order> Orders { get; set; } // For Customers
+        public ICollection<SOrder> SOrders { get; set; } // For Customers
     }
 
     // Used for dropdown list during registration

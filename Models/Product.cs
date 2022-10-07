@@ -15,7 +15,7 @@ namespace farm2plate.Models
 
         [Required]
         [Display(Name="Product Name")]
-        public int ProductName { get; set; }
+        public string ProductName { get; set; }
 
         [Required]
         [Display(Name="Price (RM)")]

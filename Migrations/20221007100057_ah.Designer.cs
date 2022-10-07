@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using farm2plate.Areas.Identity.Data;
 
 namespace farm2plate.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221007100057_ah")]
+    partial class ah
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,6 +223,39 @@ namespace farm2plate.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("farm2plate.Models.Order", b =>
+                {
+                    b.Property<int>("OrderID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ShopID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("OrderID");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasIndex("ShopID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Order");
+                });
+
             modelBuilder.Entity("farm2plate.Models.Product", b =>
                 {
                     b.Property<int>("ProductID")
@@ -232,9 +267,8 @@ namespace farm2plate.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductName")
+                        .HasColumnType("int");
 
                     b.Property<double>("ProductPrice")
                         .HasColumnType("float");
@@ -252,42 +286,9 @@ namespace farm2plate.Migrations
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("farm2plate.Models.SOrder", b =>
-                {
-                    b.Property<int>("SOrderID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SOrderStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ShopID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("SOrderID");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("ShopID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("SOrder");
-                });
-
             modelBuilder.Entity("farm2plate.Models.Shop", b =>
                 {
-                    b.Property<int>("ShopID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -300,7 +301,7 @@ namespace farm2plate.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ShopID");
+                    b.HasKey("ID");
 
                     b.HasIndex("UserID");
 
@@ -358,16 +359,7 @@ namespace farm2plate.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("farm2plate.Models.Product", b =>
-                {
-                    b.HasOne("farm2plate.Models.Shop", "Shop")
-                        .WithMany("Products")
-                        .HasForeignKey("ShopID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("farm2plate.Models.SOrder", b =>
+            modelBuilder.Entity("farm2plate.Models.Order", b =>
                 {
                     b.HasOne("farm2plate.Models.Product", "Product")
                         .WithMany()
@@ -380,8 +372,17 @@ namespace farm2plate.Migrations
                         .HasForeignKey("ShopID");
 
                     b.HasOne("farm2plate.Areas.Identity.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany("SOrders")
+                        .WithMany("Orders")
                         .HasForeignKey("UserID");
+                });
+
+            modelBuilder.Entity("farm2plate.Models.Product", b =>
+                {
+                    b.HasOne("farm2plate.Models.Shop", "Shop")
+                        .WithMany("Products")
+                        .HasForeignKey("ShopID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("farm2plate.Models.Shop", b =>
