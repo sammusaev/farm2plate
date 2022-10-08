@@ -22,8 +22,8 @@ namespace farm2plate.Models
         public Product Product { get; set; }
 
         #nullable enable
-        [ForeignKey("UserID")]
         public string? UserID { get; set; }
+        [ForeignKey("UserID")]
         public ApplicationUser? ApplicationUser { get; set; }
 
         #nullable enable

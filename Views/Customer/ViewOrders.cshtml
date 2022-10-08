@@ -20,11 +20,11 @@
         foreach (var order in ViewBag.orders)
         {
             <p>ProductID @order.SOrderID</p>
-            <p>ProductName @order.ProductQuantity</p>
-            <p>ProductImage @order.ProductID</p>
-            <p>ProductPrice: RM @order.UserID</p>
-            <p>ProductPrice: RM @order.ShopID</p>
-            <p>ProductPrice: RM @order.SOrderStatus</p>
+            <p>ProductQuantity @order.ProductQuantity</p>
+            <p>ProductID @order.ProductID</p>
+            <p>UserID: RM @order.UserID</p>
+            <p>ShopID: RM @order.ShopID</p>
+            <p>SOrderStatus: RM @order.SOrderStatus</p>
         }
     }
     else

@@ -36,6 +36,7 @@ namespace farm2plate.Controllers
             await _context.Entry(user).Collection(x => x.SOrders).LoadAsync();
             ViewBag.orders = user.SOrders;
             var ordersCount = user.SOrders.Count;
+            System.Diagnostics.Debug.WriteLine($"!!!! SOrders {user.SOrders} SOrders.Count {user.SOrders.Count}");
             if (ordersCount > 0)
             {
                 ViewBag.hasOrders = true;
@@ -54,7 +55,7 @@ namespace farm2plate.Controllers
             sorder.UserID = user.Id;
             sorder.SOrderStatus = Status.IN_PROGRESS;
 
-            System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} UserID {user.Id}");
+            System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} sorderUserID {sorder.UserID}");
 
             _context.SOrders.Add(sorder);
 
