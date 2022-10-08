@@ -21,36 +21,133 @@
         var Shop = ViewBag.Shop;
         var Products = ViewBag.Products;
         <h1> @Shop.ShopName </h1>
-        <tr>
-            <td>
-                <a asp-action="NewProduct" asp-controller="Vendor"> Add Product </a>
-                <a> View Orders </a>
-            </td>
-        </tr>
-
-        <h1> Products </h1>
+        <br /> 
+        <center> 
+            <a class="menu-button" asp-action="NewProduct" asp-controller="Vendor"> Add Product </a>
+            <a class="menu-button"> View Orders </a>
+        </center>
+        <br /> 
+        <h2> Products </h2>
+        <div class="wrapper">
         @foreach (Product p in Products)
         {
             string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@p.ProductImage}";
-            <div>
-                <div class="card">
-                    <center>
-                        <img src="@ImageURL" width="200" height="200" /> </center>
-                        <h3> @p.ProductName  </h3>
-                        <p> RM @p.ProductPrice /kg</p>
-                        <p> @p.ProductQuantity kg remaining</p>
+            <div class="card">
+                <center>
+                    <div class="fill">
+                        <img src="@ImageURL" />
+                    </div>
+                </center>
+                <br />
+                <h3>@p.ProductName</h3>
+                <p>RM @p.ProductPrice /kg</p>
+                <p> @p.ProductQuantity kg remaining</p>
+                <div class="two-column-div">
+                    <div><a>Edit Product</a></div>
+                    <div>
+                        <a>Remove Product</a>
+                    </div>
                 </div>
+   <br style="clear:both;" />
+             <br />
             </div>
-        }
+
+                    }
+        </div>
 
     }
 }
 
 <style>
+    .wrapper {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
     .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        padding: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        padding: 16px 5px 16px 5px; 
+        max-width: 350px;
+        max-height: 350px;
         text-align: center;
         background-color: #f1f1f1;
     }
+
+    .card-buttons {
+        column-count: 2;
+    }
+
+    img {
+        object-fit: cover;
+        width: 350px;
+        height: 100px;
+        padding: 10px 10px 10px 10px;
+    }
+
+    .menu-button {
+        font: 20px 'Helvetica Neue';
+        text-decoration: none;
+        background-color: #DA713D;
+        color: #040404;
+        text-align: center;
+        padding: 16px 20px 16px 20px;
+    }
+
+    .two-column-div {
+        column-count: 2;
+    }
+
+    .menu-button:hover {
+        font: 20px 'Helvetica Neue';
+        text-decoration: none;
+        background-color: #ED631F;
+        color: #040404;
+        text-align: center;
+        padding: 16px 20px 16px 20px;
+    }
+   
+    h1 {
+        color: #111;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-size: 50px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        line-height: 1;
+        text-align: center;
+    }
+
+
+
+
+    h2 {
+        color: #111;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-size: 25px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        line-height: 1;
+        text-align: center;
+    }
+
+    h3 {
+        color: #111;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        letter-spacing: -1px;
+        line-height: 1;
+        text-align: center;
+    }
+
+    p {
+        color: #111;
+        font-family: 'Helvetica', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0px;
+        line-height: 1;
+        text-align: center;
+    }
+
 </style>
