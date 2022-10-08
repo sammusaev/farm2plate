@@ -7,31 +7,37 @@
 
 <h1> Sordersss </h1>
 @{
-    /*<h1> @Model.SOrderID</h1>
-    <h1> @Model.ProductQuantity</h1>
-    <h1> @Model.ProductID</h1>
-    <h1> @Model.UserID</h1>
-    <h1> @Model.ShopID</h1>
-    <h1> @Model.SOrderStatus</h1>*/
 
     if (ViewBag.hasOrders)
     {
-
-        foreach (var order in ViewBag.orders)
+        for (var i = 0; i < ViewBag.orders.Count; i++)
         {
-            <p>ProductID @order.SOrderID</p>
-            <p>ProductQuantity @order.ProductQuantity</p>
-            <p>ProductID @order.ProductID</p>
-            <p>UserID: RM @order.UserID</p>
-            <p>ShopID: RM @order.ShopID</p>
-            <p>SOrderStatus: RM @order.SOrderStatus</p>
+            <div>
+                <div>
+                    <p>Seller @ViewBag.shopNames[i]</p>
+                </div>
+                <div>
+                    <div>
+                        Product Image
+                    </div>
+                    <div>
+                        <div>
+                            @ViewBag.productNames[i]
+                            Quantity: @ViewBag.productQuantities[i]
+                            Unit Price:  @ViewBag.productPrices[i]
+                        </div>
+                        <div>Total Price: @ViewBag.totalPrices[i]</div>
+                        <div>Order Status: @ViewBag.orderStatuses[i]</div>
+                    </div>
+                </div>
+            </div>
         }
     }
     else
     {
         <p>there are no orders</p>
+        }
+
+
+
     }
-
-
-
-}

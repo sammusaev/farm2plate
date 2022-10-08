@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using farm2plate.Areas.Identity.Data;
 using farm2plate.Models;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 
 namespace farm2plate.Controllers
 {
@@ -32,11 +33,66 @@ namespace farm2plate.Controllers
         public async Task<IActionResult> ViewOrders()
         {
             var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+
+            var productQuantitiesList = new List<double>();
+            var orderStatusesList = new List<Status>();
+
             System.Diagnostics.Debug.WriteLine($"USER ID {user.Id}");
             await _context.Entry(user).Collection(x => x.SOrders).LoadAsync();
+
+            foreach (var order in user.SOrders)
+            {
+                productQuantitiesList.Add(order.ProductQuantity);
+                orderStatusesList.Add(order.SOrderStatus);
+            }
+
             ViewBag.orders = user.SOrders;
             var ordersCount = user.SOrders.Count;
             System.Diagnostics.Debug.WriteLine($"!!!! SOrders {user.SOrders} SOrders.Count {user.SOrders.Count}");
+
+
+            // product name
+
+            /*string[] productNames;
+            double[] productPrices;
+            string[] shopNames;*/
+
+            var productNamesList = new List<string>();
+            var productPricesList = new List<double>();
+            var shopNamesList = new List<string>();
+            var totalPricesList = new List<double>();
+
+            foreach (var order in user.SOrders) {
+                var product = await _context.Products.FindAsync(order.ProductID);
+                var shop = await _context.Shops.FindAsync(order.ShopID);
+                productNamesList.Add(product.ProductName);
+                productPricesList.Add(product.ProductPrice);
+                shopNamesList.Add(shop.ShopName);
+                totalPricesList.Add(order.ProductQuantity * product.ProductPrice);
+            }
+
+            var productNames = productNamesList.ToArray();
+            var productPrices = productPricesList.ToArray();
+            var shopNames = shopNamesList.ToArray();
+            var totalPrices = totalPricesList.ToArray();
+            var productQuantities = productQuantitiesList.ToArray();
+            var orderStatuses = orderStatusesList.ToArray();
+            // product price
+
+            // order total price
+
+            // shop name
+
+            ViewBag.productNames = productNames;
+            ViewBag.productPrices = productPrices;
+            ViewBag.shopNames = shopNames;
+            ViewBag.totalPrices = totalPrices;
+            ViewBag.productQuantities = productQuantities;
+            ViewBag.orderStatuses = orderStatuses;
+
+            System.Diagnostics.Debug.WriteLine($"!!!! productNames {ViewBag.productNames[0]} productPrices {ViewBag.productPrices[0]} shopNames {ViewBag.shopNames[0]} totalPrices {ViewBag.totalPrices[0]}");
+
+
             if (ordersCount > 0)
             {
                 ViewBag.hasOrders = true;
