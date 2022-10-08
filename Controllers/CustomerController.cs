@@ -21,7 +21,7 @@ namespace farm2plate.Controllers
 
         public async Task<IActionResult> ViewShop(int? ShopID)
         {
-            //System.Diagnostics.Debug.WriteLine($"Shop ID {ShopID}");
+                        //System.Diagnostics.Debug.WriteLine($"Shop ID {ShopID}");
             var shop = await _context.Shops.FindAsync(ShopID);
             //System.Diagnostics.Debug.WriteLine($"Just Shop {shop}");
             await _context.Entry(shop).Collection(x => x.Products).LoadAsync();
