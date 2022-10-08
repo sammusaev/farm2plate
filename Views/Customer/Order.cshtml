@@ -3,13 +3,15 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    var imageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{ViewBag.ProductImage}";
     <h1>Your Order has been placed</h1>
-    <h2>Seller has been notified. (Order Status: In Progress)</h2>
+    <h2>Seller @ViewBag.ShopName has been notified. (Order Status: @Model.SOrderStatus)</h2>
     <form asp-action="RedirectCustomerHome" asp-controller="Customer" method="get">
-        <input type="submit" value="Confirm and Return Home"/>
+        <input type="submit" value="Confirm and Return Home" />
     </form>
-    <p>Shop Name</p>
-    <p>Product Name</p>
-    <p>Product Quantity</p>
-    <p>Total Price</p>
+    <img src="@imageURL" width="200" height="200"/>
+    <p>@ViewBag.ProductName</p>
+    <p>Quantity: @Model.ProductQuantity kg</p>
+    <p>Unit Price: RM @ViewBag.ProductPrice per kg</p>
+    <p>Total Price: RM @ViewBag.TotalPrice</p>
 }

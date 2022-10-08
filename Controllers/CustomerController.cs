@@ -5,6 +5,7 @@ using farm2plate.Areas.Identity.Data;
 using farm2plate.Models;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
+using System;
 
 namespace farm2plate.Controllers
 {
@@ -22,11 +23,12 @@ namespace farm2plate.Controllers
 
         public async Task<IActionResult> ViewShop(int? ShopID)
         {
-                        //System.Diagnostics.Debug.WriteLine($"Shop ID {ShopID}");
+            //System.Diagnostics.Debug.WriteLine($"Shop ID {ShopID}");
             var shop = await _context.Shops.FindAsync(ShopID);
             //System.Diagnostics.Debug.WriteLine($"Just Shop {shop}");
             await _context.Entry(shop).Collection(x => x.Products).LoadAsync();
             //System.Diagnostics.Debug.WriteLine($"Shop Name {shop.Name}");
+            ViewBag.BucketName = Environment.GetEnvironmentVariable("AWS_IMAGE_BUCKET_NAME");
             return View(shop);
         }
 
@@ -48,7 +50,7 @@ namespace farm2plate.Controllers
 
             ViewBag.orders = user.SOrders;
             var ordersCount = user.SOrders.Count;
-            System.Diagnostics.Debug.WriteLine($"!!!! SOrders {user.SOrders} SOrders.Count {user.SOrders.Count}");
+            //System.Diagnostics.Debug.WriteLine($"!!!! SOrders {user.SOrders} SOrders.Count {user.SOrders.Count}");
 
 
             // product name
@@ -59,6 +61,7 @@ namespace farm2plate.Controllers
 
             var productNamesList = new List<string>();
             var productPricesList = new List<double>();
+            var productImagesList = new List<string>();
             var shopNamesList = new List<string>();
             var totalPricesList = new List<double>();
 
@@ -66,6 +69,7 @@ namespace farm2plate.Controllers
                 var product = await _context.Products.FindAsync(order.ProductID);
                 var shop = await _context.Shops.FindAsync(order.ShopID);
                 productNamesList.Add(product.ProductName);
+                productImagesList.Add(product.ProductImage);
                 productPricesList.Add(product.ProductPrice);
                 shopNamesList.Add(shop.ShopName);
                 totalPricesList.Add(order.ProductQuantity * product.ProductPrice);
@@ -73,6 +77,7 @@ namespace farm2plate.Controllers
 
             var productNames = productNamesList.ToArray();
             var productPrices = productPricesList.ToArray();
+            var productImages = productImagesList.ToArray();
             var shopNames = shopNamesList.ToArray();
             var totalPrices = totalPricesList.ToArray();
             var productQuantities = productQuantitiesList.ToArray();
@@ -85,13 +90,13 @@ namespace farm2plate.Controllers
 
             ViewBag.productNames = productNames;
             ViewBag.productPrices = productPrices;
+            ViewBag.productImages = productImages;
             ViewBag.shopNames = shopNames;
             ViewBag.totalPrices = totalPrices;
             ViewBag.productQuantities = productQuantities;
             ViewBag.orderStatuses = orderStatuses;
 
-            System.Diagnostics.Debug.WriteLine($"!!!! productNames {ViewBag.productNames[0]} productPrices {ViewBag.productPrices[0]} shopNames {ViewBag.shopNames[0]} totalPrices {ViewBag.totalPrices[0]}");
-
+            ViewBag.BucketName = Environment.GetEnvironmentVariable("AWS_IMAGE_BUCKET_NAME");
 
             if (ordersCount > 0)
             {
@@ -101,29 +106,64 @@ namespace farm2plate.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Order([Bind("ProductQuantity")] SOrder sorder, int? ProductQuantity, int? ProductID, int? ShopID)
+        public async Task<IActionResult> Order([Bind("ProductQuantity")] SOrder sorder, double? ProductQuantity, int? ProductID, int? ShopID, string ShopName, string ProductImage, string ProductName, double? ProductPrice)
         {
+
+            System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} sorderUserID {sorder.UserID}");
+
             var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
             var product = await _context.Products.FindAsync(ProductID);
             sorder.ProductID = (int)ProductID;
-            sorder.ProductQuantity = (int)ProductQuantity;
+            sorder.ProductQuantity = (double)ProductQuantity;
             sorder.ShopID = (int)ShopID;
             sorder.UserID = user.Id;
             sorder.SOrderStatus = Status.IN_PROGRESS;
 
-            System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} sorderUserID {sorder.UserID}");
+            ViewBag.ShopName = ShopName;
+            ViewBag.ShopName = ShopName;
+            ViewBag.BucketName = Environment.GetEnvironmentVariable("AWS_IMAGE_BUCKET_NAME");
+            ViewBag.ProductImage = ProductImage;
+            ViewBag.ProductPrice = ProductPrice;
+            ViewBag.TotalPrice = ProductQuantity * ProductPrice;    
 
             _context.SOrders.Add(sorder);
 
-            product.ProductQuantity = (int)(product.ProductQuantity - ProductQuantity);
+            product.ProductQuantity = (double)(product.ProductQuantity - ProductQuantity);
 
              await _context.SaveChangesAsync();
 
 
             //System.Diagnostics.Debug.WriteLine($"Product Name {product.ProductName}");
-            return View(); // order page
+            return View(sorder);
         }
 
+       /* [HttpPost]
+        public async Task<IActionResult> Order([Bind("ProductQuantity")] SOrder sorder, double? ProductQuantity, int? ProductID, int? ShopID)
+        {
+
+            System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} sorderUserID {sorder.UserID}");
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            var product = await _context.Products.FindAsync(ProductID);
+            sorder.ProductID = (int)ProductID;
+            sorder.ProductQuantity = (double)ProductQuantity;
+            sorder.ShopID = (int)ShopID;
+            sorder.UserID = user.Id;
+            sorder.SOrderStatus = Status.IN_PROGRESS;
+
+            _context.SOrders.Add(sorder);
+
+            product.ProductQuantity = (double)(product.ProductQuantity - ProductQuantity);
+
+            await _context.SaveChangesAsync();
+
+            ViewBag.ProductName
+
+
+            //System.Diagnostics.Debug.WriteLine($"Product Name {product.ProductName}");
+            return View();
+        }
+*/
         public async Task<IActionResult> Index()
         {
             var shops = _context.Shops;

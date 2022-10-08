@@ -12,21 +12,20 @@
     {
         for (var i = 0; i < ViewBag.orders.Count; i++)
         {
+            string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
             <div>
                 <div>
-                    <p>Seller @ViewBag.shopNames[i]</p>
+                    <p>Seller: @ViewBag.shopNames[i]</p>
                 </div>
                 <div>
-                    <div>
-                        Product Image
-                    </div>
+                    <img src="@ImageURL" width="200" height="200"/>
                     <div>
                         <div>
-                            @ViewBag.productNames[i]
-                            Quantity: @ViewBag.productQuantities[i]
-                            Unit Price:  @ViewBag.productPrices[i]
+                            <div>@ViewBag.productNames[i]</div>
+                            <div>Quantity: @ViewBag.productQuantities[i] kg</div>
+                            <div>Unit Price:  @ViewBag.productPrices[i] per kg</div>
                         </div>
-                        <div>Total Price: @ViewBag.totalPrices[i]</div>
+                        <div>Total Price: RM @Math.Round(ViewBag.totalPrices[i], 2).ToString()</div>
                         <div>Order Status: @ViewBag.orderStatuses[i]</div>
                     </div>
                 </div>
@@ -35,7 +34,7 @@
     }
     else
     {
-        <p>there are no orders</p>
+        <p>You have not made any orders</p>
         }
 
 

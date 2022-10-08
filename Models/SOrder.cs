@@ -14,7 +14,7 @@ namespace farm2plate.Models
         public int SOrderID { get; set; }
 
         [Required]
-        public int ProductQuantity { get; set; }
+        public double ProductQuantity { get; set; }
 
         [Required]
         [ForeignKey("ProductID")]

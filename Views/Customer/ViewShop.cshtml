@@ -5,7 +5,6 @@
 @{
 }
 
-<h1> Hey </h1>
 @{
     <h1> @Model.ShopName</h1>
     if (Model.Products.Count == 0)
@@ -16,16 +15,21 @@
     {
         foreach (var product in Model.Products)
         {
-            <p>ProductID @product.ProductID</p>
-            <p>ProductName @product.ProductName</p>
-            <p>ProductImage @product.ProductImage</p>
-            <p>ProductPrice: RM @product.ProductPrice</p>
+            string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@product.ProductImage}";
+            <img src="@ImageURL" width="200" height="200" />
+            <h2>@product.ProductName</h2>
+            <h3>RM @product.ProductPrice per kg</h3> 
             if (@product.ProductQuantity > 0)
             {
                 <form method="post" asp-action="Order" asp-controller="Customer">
                     <input type="hidden" name="ShopID" value="@Model.ShopID" />
+                    <input type="hidden" name="ShopName" value="@Model.ShopName" />
+                    <input type="hidden" name="ProductImage" value="@product.ProductImage" />
+                    <input type="hidden" name="ProductName" value="@product.ProductName" />
+                    <input type="hidden" name="ProductPrice" value="@product.ProductPrice" />
                     <input type="hidden" name="ProductID" value="@product.ProductID" />
-                    <input type="number" name="ProductQuantity" min="1" value="1" max="@product.ProductQuantity" placeholder="1" />
+                    <input type="number" name="ProductQuantity" min="0.01" value="1" max="@product.ProductQuantity" placeholder="1" step=".01" /> kg
+                    <p>(@product.ProductQuantity kg left)</p>
                     <input type="submit" value="Place Order" />
                 </form>
             }
