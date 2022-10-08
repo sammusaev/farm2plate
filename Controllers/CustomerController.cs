@@ -29,6 +29,20 @@ namespace farm2plate.Controllers
             return View(shop);
         }
 
+        public async Task<IActionResult> ViewOrders()
+        {
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            System.Diagnostics.Debug.WriteLine($"USER ID {user.Id}");
+            await _context.Entry(user).Collection(x => x.SOrders).LoadAsync();
+            ViewBag.orders = user.SOrders;
+            var ordersCount = user.SOrders.Count;
+            if (ordersCount > 0)
+            {
+                ViewBag.hasOrders = true;
+            } else ViewBag.hasOrders = false;
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Order([Bind("ProductQuantity")] SOrder sorder, int? ProductQuantity, int? ProductID, int? ShopID)
         {
@@ -42,7 +56,7 @@ namespace farm2plate.Controllers
 
             System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} UserID {user.Id}");
 
-            _context.SOrder.Add(sorder);
+            _context.SOrders.Add(sorder);
 
             product.ProductQuantity = (int)(product.ProductQuantity - ProductQuantity);
 

@@ -9,9 +9,12 @@
 
 <h1>Customer is here</h1>
 
-
-
 @{ 
+
+    <form asp-action="ViewOrders" asp-controller="Customer" method="get">
+        <input type="submit" value="My Orders" />
+    </form>
+
     var shops = ViewBag.Shops;
     foreach(Shop s in shops)
     {
