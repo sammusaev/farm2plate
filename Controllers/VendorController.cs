@@ -25,7 +25,6 @@ namespace farm2plate.Controllers
         private ApplicationUser _user;
         private readonly ApplicationDbContext _context;
         
-     
         public VendorController(MANCI.UserManager<ApplicationUser> userManager, ApplicationDbContext context) {
             _userManager = userManager;
             _context = context;
@@ -47,8 +46,7 @@ namespace farm2plate.Controllers
         }
        
         [HttpPost]
-        public async Task<IActionResult> CreateShop([Bind("ShopName")] Shop shop)
-        {
+        public async Task<IActionResult> CreateShop([Bind("ShopName")] Shop shop) {
             shop.UserID = await GetUserID();
             try {
                 _context.Shops.Add(shop);
@@ -81,9 +79,34 @@ namespace farm2plate.Controllers
             }
         }
 
+        public async Task<IActionResult> EditProduct([Bind("ProductName", "ProductPrice", "ProductQuantity")] Product product, int ProductID) {
+            System.Diagnostics.Debug.WriteLine($"PRODUCT ID {product.ProductImage}");
+            Product p = await _context.Products.FindAsync(ProductID);
+            p.ProductName = product.ProductName;
+            p.ProductPrice = product.ProductPrice;
+            p.ProductQuantity = product.ProductQuantity;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Vendor");
+        }
+
 
         // Page Views
-        public IActionResult NewProduct() {
+        public IActionResult UploadProductView() {
+            return View();
+        }
+
+        public async Task<IActionResult> EditProductView(int? ProductID) {
+            if (ProductID != null) {
+                Product Product = await _context.Products.FindAsync(ProductID);
+                if (Product != null) {
+                    return View(Product);
+                }
+            }
+            // TODO - Handle Error (redirect to error page?)
+            return RedirectToAction("Index", "Vendor");
+        }
+
+        public IActionResult DeleteProductView() {
             return View();
         }
 
@@ -96,8 +119,7 @@ namespace farm2plate.Controllers
             ViewBag.hasShop = true;
             if (shopCount==0)
                 ViewBag.hasShop = false;
-            else
-            {
+            else {
                 var _shop = _user.Shops.First();
                 ViewBag.Shop = _shop;
                 ViewBag.BucketName = Environment.GetEnvironmentVariable("AWS_IMAGE_BUCKET_NAME");

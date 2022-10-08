@@ -23,7 +23,7 @@
         <h1> @Shop.ShopName </h1>
         <br /> 
         <center> 
-            <a class="menu-button" asp-action="NewProduct" asp-controller="Vendor"> Add Product </a>
+            <a class="menu-button" asp-action="UploadProductView" asp-controller="Vendor"> Add Product </a>
             <a class="menu-button"> View Orders </a>
         </center>
         <br /> 
@@ -43,7 +43,7 @@
                 <p>RM @p.ProductPrice /kg</p>
                 <p> @p.ProductQuantity kg remaining</p>
                 <div class="two-column-div">
-                    <div><a>Edit Product</a></div>
+                    <div><a asp-action="EditProductView" asp-route-ProductID="@p.ProductID">Edit Product</a></div>
                     <div>
                         <a>Remove Product</a>
                     </div>
