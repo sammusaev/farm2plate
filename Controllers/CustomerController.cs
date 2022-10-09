@@ -38,6 +38,7 @@ namespace farm2plate.Controllers
 
             var productQuantitiesList = new List<double>();
             var orderStatusesList = new List<Status>();
+            var orderIdsList = new List<int>();
 
             System.Diagnostics.Debug.WriteLine($"USER ID {user.Id}");
             await _context.Entry(user).Collection(x => x.SOrders).LoadAsync();
@@ -46,18 +47,12 @@ namespace farm2plate.Controllers
             {
                 productQuantitiesList.Add(order.ProductQuantity);
                 orderStatusesList.Add(order.SOrderStatus);
+                orderIdsList.Add(order.SOrderID);
             }
 
             ViewBag.orders = user.SOrders;
             var ordersCount = user.SOrders.Count;
             //System.Diagnostics.Debug.WriteLine($"!!!! SOrders {user.SOrders} SOrders.Count {user.SOrders.Count}");
-
-
-            // product name
-
-            /*string[] productNames;
-            double[] productPrices;
-            string[] shopNames;*/
 
             var productNamesList = new List<string>();
             var productPricesList = new List<double>();
@@ -82,11 +77,7 @@ namespace farm2plate.Controllers
             var totalPrices = totalPricesList.ToArray();
             var productQuantities = productQuantitiesList.ToArray();
             var orderStatuses = orderStatusesList.ToArray();
-            // product price
-
-            // order total price
-
-            // shop name
+            var orderIdS = orderIdsList.ToArray();
 
             ViewBag.productNames = productNames;
             ViewBag.productPrices = productPrices;
@@ -95,6 +86,7 @@ namespace farm2plate.Controllers
             ViewBag.totalPrices = totalPrices;
             ViewBag.productQuantities = productQuantities;
             ViewBag.orderStatuses = orderStatuses;
+            ViewBag.orderIdS = orderIdS;
 
             ViewBag.BucketName = Environment.GetEnvironmentVariable("AWS_IMAGE_BUCKET_NAME");
 
@@ -102,6 +94,22 @@ namespace farm2plate.Controllers
             {
                 ViewBag.hasOrders = true;
             } else ViewBag.hasOrders = false;
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeOrderStatus([Bind("SOrderStatus")] SOrder sorder, int? OrderID, Status SOrderStatus)
+        {
+
+            System.Diagnostics.Debug.WriteLine($"!!! sorder {sorder} SOrderStatus {SOrderStatus} OrderID {OrderID}");
+
+            var order = await _context.SOrders.FindAsync(OrderID);
+            order.SOrderStatus = SOrderStatus;
+            await _context.SaveChangesAsync();
+
+            ViewBag.OrderID = OrderID;
+            ViewBag.NewOrderStatus = SOrderStatus;
             return View();
         }
 
@@ -137,33 +145,6 @@ namespace farm2plate.Controllers
             return View(sorder);
         }
 
-       /* [HttpPost]
-        public async Task<IActionResult> Order([Bind("ProductQuantity")] SOrder sorder, double? ProductQuantity, int? ProductID, int? ShopID)
-        {
-
-            System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} sorderUserID {sorder.UserID}");
-
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
-            var product = await _context.Products.FindAsync(ProductID);
-            sorder.ProductID = (int)ProductID;
-            sorder.ProductQuantity = (double)ProductQuantity;
-            sorder.ShopID = (int)ShopID;
-            sorder.UserID = user.Id;
-            sorder.SOrderStatus = Status.IN_PROGRESS;
-
-            _context.SOrders.Add(sorder);
-
-            product.ProductQuantity = (double)(product.ProductQuantity - ProductQuantity);
-
-            await _context.SaveChangesAsync();
-
-            ViewBag.ProductName
-
-
-            //System.Diagnostics.Debug.WriteLine($"Product Name {product.ProductName}");
-            return View();
-        }
-*/
         public async Task<IActionResult> Index()
         {
             var shops = _context.Shops;
@@ -179,6 +160,11 @@ namespace farm2plate.Controllers
         public RedirectToActionResult RedirectCustomerHome()
         {
             return RedirectToAction("Index", "Customer");
+        }
+
+        public LocalRedirectResult RedirectViewOrders()
+        {
+            return LocalRedirect("/Customer/ViewOrders");
         }
     }
 }
