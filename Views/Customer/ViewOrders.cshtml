@@ -32,6 +32,7 @@
 
                     <form method="post" asp-action="ChangeOrderStatus" asp-controller="Customer">
                         <input type="hidden" name="OrderID" value="@ViewBag.orderIds[i]" />
+                        <input type="hidden" name="ShopName" value="@ViewBag.shopNames[i]" />
 
                         @switch (@ViewBag.orderStatuses[i])
                         {

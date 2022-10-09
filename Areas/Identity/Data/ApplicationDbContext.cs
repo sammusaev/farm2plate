@@ -12,6 +12,7 @@ namespace farm2plate.Areas.Identity.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public virtual DbSet<OrderStatusChange> OrderStatusChanges { get; set; }
         public virtual DbSet<Shop> Shops { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<SOrder> SOrders { get; set; }

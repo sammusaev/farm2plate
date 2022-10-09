@@ -221,6 +221,39 @@ namespace farm2plate.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("farm2plate.Models.OrderStatusChange", b =>
+                {
+                    b.Property<int>("OrderStatusChangeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CustomerID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NewSOrderStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OldSOrderStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SOrderDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SOrderID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShopName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("OrderStatusChangeID");
+
+                    b.ToTable("OrderStatusChanges");
+                });
+
             modelBuilder.Entity("farm2plate.Models.Product", b =>
                 {
                     b.Property<int>("ProductID")

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\HomeController1.cs" />
     <Compile Remove="Migrations\20221006074839_shop.cs" />
     <Compile Remove="Migrations\20221006074839_shop.Designer.cs" />
     <Compile Remove="Migrations\20221007094908_carebear.cs" />
@@ -23,6 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.7.9.37" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.2.101" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.25" />

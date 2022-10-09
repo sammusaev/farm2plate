@@ -6,6 +6,9 @@ using farm2plate.Models;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System;
+using Amazon.SQS.Model;
+using Amazon.SQS;
+using System.Text.Json;
 
 namespace farm2plate.Controllers
 {
@@ -15,6 +18,7 @@ namespace farm2plate.Controllers
         private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
         // private ApplicationUser _user;
         private readonly ApplicationDbContext _context;
+        private const string queueName = "farm2plateQueue";
 
         public CustomerController(Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager, ApplicationDbContext context) {
             _userManager = userManager;
@@ -140,9 +144,65 @@ namespace farm2plate.Controllers
 
              await _context.SaveChangesAsync();
 
+            // SQS
 
-            //System.Diagnostics.Debug.WriteLine($"Product Name {product.ProductName}");
+            string AWS_ACCESS_KEY = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
+            string AWS_SECRET_ACCESS_KEY = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+            string AWS_SESSION_TOKEN = Environment.GetEnvironmentVariable("AWS_SESSION_TOKEN");
+
+            AmazonSQSClient sqsClient = new AmazonSQSClient(AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN, Amazon.RegionEndpoint.USEast1);
+
+            try {
+                var res = await sqsClient.GetQueueUrlAsync(new GetQueueUrlRequest { QueueName = queueName });
+                GetQueueAttributesRequest attReq = new GetQueueAttributesRequest();
+                attReq.QueueUrl = res.QueueUrl;
+                attReq.AttributeNames.Add("ApproximateNumberOfMessages");
+                GetQueueAttributesResponse attRes = await sqsClient.GetQueueAttributesAsync(attReq);
+                ViewBag.messageCount = attRes.ApproximateNumberOfMessages;
+            } catch (AmazonSQSException ex)
+            {
+                ViewBag.message = ex.Message;
+            }
+
             return View(sorder);
+        }
+
+        // sendmessage and order can be combined (httppost and validateantiforgerytoken tags both apply)
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> sendMessage(string ShopName, int OrderID, Status newOrderStatus)
+        {
+            string AWS_ACCESS_KEY = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
+            string AWS_SECRET_ACCESS_KEY = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+            string AWS_SESSION_TOKEN = Environment.GetEnvironmentVariable("AWS_SESSION_TOKEN");
+
+            AmazonSQSClient sqsClient = new AmazonSQSClient(AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN, Amazon.RegionEndpoint.USEast1);
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+
+            OrderStatusChange orderStatusChange = new OrderStatusChange
+            {
+                CustomerID = user.Id,
+                CustomerName = user.UserName,
+                ShopName = ShopName,
+                SOrderID = OrderID,
+                OldSOrderStatus = Status.IN_PROGRESS,
+                NewSOrderStatus = newOrderStatus,
+                SOrderDateTime = DateTime.Now
+            };
+
+            try
+            {
+                SendMessageRequest sendReq = new SendMessageRequest { MessageBody = JsonSerializer.Serialize(orderStatusChange)};
+                var res = await sqsClient.GetQueueUrlAsync(new GetQueueUrlRequest { QueueName = queueName });
+                sendReq.QueueUrl = res.QueueUrl;
+                await sqsClient.SendMessageAsync(sendReq);
+            }
+            catch (AmazonSQSException ex)
+            {
+                return RedirectToAction("Index", "SQSExample", new { msg = "Reservation error! Error: " + ex.Message });
+            }
+            return RedirectToAction("Index", "SQSExample", new { msg = "Reservation done! Our representative will contact you soon!" });
         }
 
         public async Task<IActionResult> Index()
