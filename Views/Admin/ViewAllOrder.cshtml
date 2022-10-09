@@ -1,0 +1,40 @@
+﻿@model farm2plate.Models.SOrder;
+
+@{
+    ViewData["Title"] = "ViewAllOrder";
+}
+
+<h1>All Orders Report</h1>
+
+<br />
+
+@*<div><input type="text" class="form-control" id="txtSearch" placeholder="Search" /><br /></div>*@
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Order ID </th>
+        <th>Shop Name </th>
+        <th>Customer ID </th>
+        <th>Product Name </th>
+        <th>Product Quantity </th>
+        <th>Order Status </th>
+
+    </tr>
+
+    @{
+        var orders = ViewBag.SOrders;
+        var productNamesList = ViewBag.productNames;
+        var shopNamesList = ViewBag.shopNames;
+
+        for (int i = 0; i < ViewBag.ordersCount; i++)
+        {
+            <tr>
+                <td>@orders[i].SOrderID</td>
+                <td>@shopNamesList[i]</td>
+                <td>@orders[i].UserID</td>
+                <td>@productNamesList[i]</td>
+                <td>@orders[i].ProductQuantity</td>
+                <td>@orders[i].SOrderStatus</td>
+            </tr>
+        }
+    }
+</table> 

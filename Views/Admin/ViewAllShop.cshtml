@@ -1,0 +1,31 @@
+﻿
+
+@model farm2plate.Models.Shop;
+
+
+@{
+    ViewData["Title"] = "ViewAllShop";
+}
+
+<h1>View All Shops</h1>
+<div></div>
+
+<table class="table table-responsive table-hover">
+    <tr>
+        <th>Shop ID </th>
+        <th>Shop Name </th>
+        <th>Vendor ID</th>
+    </tr>
+
+    @{
+        var shops = ViewBag.Shops;
+        foreach (Shop s in shops)
+        {
+        <tr>
+            <td>@s.ShopID</td>
+            <td>@s.ShopName</td>
+            <td>@s.UserID</td>
+        </tr>
+        }
+    }
+</table> 
