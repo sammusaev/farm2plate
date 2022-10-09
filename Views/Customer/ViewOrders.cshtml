@@ -13,6 +13,7 @@
         for (var i = 0; i < ViewBag.orders.Count; i++)
         {
             string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
+            int status;
             <div>
                 <div>
                     <p>Seller: @ViewBag.shopNames[i]</p>
@@ -21,12 +22,56 @@
                     <img src="@ImageURL" width="200" height="200"/>
                     <div>
                         <div>
+                            <div>Order ID: @ViewBag.orderIds[i]</div>
                             <div>@ViewBag.productNames[i]</div>
                             <div>Quantity: @ViewBag.productQuantities[i] kg</div>
                             <div>Unit Price:  @ViewBag.productPrices[i] per kg</div>
                         </div>
                         <div>Total Price: RM @Math.Round(ViewBag.totalPrices[i], 2).ToString()</div>
+                        @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS) {
+
+                    <form method="post" asp-action="ChangeOrderStatus" asp-controller="Customer">
+                        <input type="hidden" name="OrderID" value="@ViewBag.orderIds[i]" />
+
+                        @switch (@ViewBag.orderStatuses[i])
+                        {
+                            case Status.IN_PROGRESS:
+                                status = 0;
+                                break;
+                            case Status.IN_TRANSIT:
+                                status = 1;
+                                break;
+                            case Status.RECEIVED:
+                                status = 2;
+                                break;
+                            case Status.CANCELLED:
+                                status = 3;
+                                break;
+                            default:
+                                status = 0;
+                                break;
+                        }
+                        tatatatata @ViewBag.orderStatuses[i]
+                        dadadadada @status
+                        <div>Order Status:</div>
+                        <select name="SOrderStatus">
+                            <option value=0 selected disabled hidden>
+                                IN_PROGRESS
+                            </option>
+                            <option value=2>
+                                RECEIVED
+                            </option>
+                            <option value=3>
+                                CANCELLED
+                            </option>
+                        </select>
+                        <input type="submit" value="Change Status" />
+                    </form>
+                        } else {
                         <div>Order Status: @ViewBag.orderStatuses[i]</div>
+
+                        }
+
                     </div>
                 </div>
             </div>
