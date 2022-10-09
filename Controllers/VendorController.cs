@@ -106,8 +106,20 @@ namespace farm2plate.Controllers
             return RedirectToAction("Index", "Vendor");
         }
 
-        public IActionResult DeleteProductView() {
-            return View();
+        public void DeleteProductView() {
+            System.Diagnostics.Debug.WriteLine($"Initializing SNS");
+            SNSService SNSService = new SNSService();
+            System.Diagnostics.Debug.WriteLine($"Initialized SNS");
+
+            // SNSService.AddToSandbox(phone3);
+            // SNSService.ConfirmSandbox("291627", phone3);
+
+            // SNSService.AddSubscriberSMS(phone1);
+            // SNSService.AddSubscriberSMS(phone3);
+            SNSService.SendSMS("+601111856340", "TEST");
+            SNSService.SendSMS("+601120819021", "TEST");
+
+            //return View();
         }
 
         public async Task<IActionResult> Index() {
