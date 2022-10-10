@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>ViewOrdersView</h1>
+<h1> Orders </h1>
 
 @{ 
     var Orders = ViewBag.Orders;
@@ -19,6 +19,7 @@
         <h1> You don't have any orders yet </h1>
     }
     else {
+        <center>
         <table>
             <tr>
                 <th>Order ID</th>
@@ -34,26 +35,23 @@
                 <td> @UserNames[i] </td>
                 <td> @ProductNames[i] </td>
                 <td> @Orders[i].ProductQuantity </td>
-                <td> 
-                1 mirrion dorrar 
-                </td>
+                <td> TOTAL AMOUNT GOES HERE </td>
                 <td>
-                    @if (Orders[i].SOrderStatus == 0)
-                    {
+                    @if (Orders[i].SOrderStatus == 0) {
                         <select name="SOrderStatus">
                             <option value=0 selected disabled hidden>@Orders[i].SOrderStatus.ToString()</option>
                             <option value=1>@Status.IN_TRANSIT</option>
                         </select>
-                        <a class="btn-dark" asp-action="UpdateOrderStatus" asp-route-SOrderID="@Orders[i].SOrderID"> Update Status </a>
+                        <a class="menu-button" asp-action="UpdateOrderStatus" asp-route-SOrderID="@Orders[i].SOrderID"> Update Status </a>
                     }
-                    else
-                    {
-                        @Orders[i].SOrderStatus.ToString()
+                    else {
+                        <center> @Orders[i].SOrderStatus.ToString() </center>
                     }
                 </td>
             </tr>
         }
         </table>
+        </center>
     }
 }
 
@@ -61,23 +59,41 @@
 
     table {
         text-align: left;
-        position: relative;
+        position: center;
         border-collapse: collapse;
         background-color: #f6f6f6;
     }
-    /* Spacing */
+
     td, th {
         border: 1px solid #999;
         padding: 20px;
+        text-align: center;
+        font: 12px 'Helvetica Neue';
     }
 
     th {
-        background: brown;
+        background: #DA713D;
         color: white;
         border-radius: 0;
         position: sticky;
         top: 0;
         padding: 10px;
+        font: 16px 'Helvetica Neue';
+        font-weight: bold;
+    }
+
+    .menu-button {
+        font: 16px 'Helvetica Neue';
+        text-decoration: none;
+        background-color: #DA713D;
+        color: #040404;
+        padding: 5px 6px 5px 6px;
+    }
+
+
+    .menu-button:hover {
+        background-color: #ED631F;
+        color: #040404;
     }
 
     .primary {
@@ -91,6 +107,39 @@
 
     tbody > tr:hover {
         background-color: #ffc107;
+    }
+
+    h1 {
+        color: #111;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-size: 50px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        line-height: 1;
+        text-align: center;
+    }
+
+
+
+
+    h2 {
+        color: #111;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-size: 25px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        line-height: 1;
+        text-align: center;
+    }
+
+    h3 {
+        color: #111;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        letter-spacing: -1px;
+        line-height: 1;
+        text-align: center;
     }
 </style>
 
