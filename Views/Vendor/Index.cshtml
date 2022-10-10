@@ -3,19 +3,32 @@
     ViewData["Title"] = "Vendor Home";
 }
 
-<script>
-    function DeleteConfirmation() {
-        var x = confirm("Are you sure you want to delete this product?");
-        if (x)
-            return true;
-        else
-            return false;
-    }
-</script>
 
 @{
-    
 
+    bool phoneExists = ViewBag.PhoneExists;
+    bool verified = ViewBag.PhoneIsVerified;
+
+    <center>
+        @if (!phoneExists){
+        <div>
+            <p color="red"> You haven't added a phone number yet </p>
+            <form asp-action="AddPhoneNumber" method="post" asp-controller="Vendor">
+                <input type="text" id="txtName" name="PhoneNumber" placeholder="+60..." />
+                <input type="submit" value="Add Number" />
+            </form>   
+        </div>
+        <br />
+        }
+
+        @if (!verified) {
+        <div>
+            <p color="red"> You haven't verified your phone number </p>
+            <a asp-action="VerifyPhoneNumberView">Verify Now</a>
+        </div>
+        <br />
+        }
+    </center>
 
     var HasShop = ViewBag.HasShop;
     if (!HasShop)

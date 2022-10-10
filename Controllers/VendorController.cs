@@ -103,6 +103,42 @@ namespace farm2plate.Controllers
             return View();
         }
 
+        public IActionResult VerifyPhoneNumberView() {
+            return View();
+        }
+
+        public string formatNumber(string number) {
+            if (!number.Contains("+6"))
+                return "+6" + number;
+            return number;
+        }
+
+        public async Task<IActionResult> AddPhoneNumber(string PhoneNumber) {
+            ApplicationUser user = await GetUser();
+            SNSService service = new SNSService();
+            PhoneNumber = formatNumber(PhoneNumber);
+            user.PhoneNumber = PhoneNumber;
+            await _context.SaveChangesAsync();
+            service.AddToSandbox(PhoneNumber);
+            service.AddSubscriberSMS(PhoneNumber);
+            return RedirectToAction("Index", "Vendor");
+        }
+
+        public async Task<IActionResult> VerifyPhoneNumber(string token) {
+            ApplicationUser user = await GetUser();
+            System.Diagnostics.Debug.WriteLine($"Token is {token}");
+            string number = user.PhoneNumber;
+            SNSService service = new SNSService();
+            service.ConfirmSandbox(token, number);
+            if (await service.IsNumberConfirmed(number)) {
+                user.PhoneIsVerified = true;
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Vendor");
+            }
+            ViewBag.Error = "Invalid/Expired token!";
+            return RedirectToAction("VerifyPhoneNumberView", "Vendor");
+        }
+
         public async Task<IActionResult> UpdateOrderStatus(int SOrderID)
         {
             SOrder order = await _context.SOrders.FindAsync(SOrderID);
@@ -198,6 +234,7 @@ namespace farm2plate.Controllers
             }
             System.Diagnostics.Debug.WriteLine($"PHONE IS {phoneExists}");
             bool verified = _user.PhoneIsVerified;
+            ViewBag.PhoneExists = phoneExists;
             ViewBag.PhoneIsVerified = verified;
             return View();
         }
