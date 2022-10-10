@@ -5,7 +5,7 @@
 @{
 }
 
-<h1> Sordersss </h1>
+<h1> My Orders </h1>
 @{
 
     if (ViewBag.hasOrders)
@@ -13,9 +13,7 @@
         <div class="order-catalogue">
             @for (var i = 0; i < ViewBag.orders.Count; i++)
             {
-                string idname = $"changestatus-{@ViewBag.orderIds[i]}";
                 string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
-                int status;
             <div class="order-card">
                 <div class="shop-name">@ViewBag.shopNames[i]</div>
                 <div class="order-content">
@@ -33,49 +31,28 @@
                                     <div>Unit Price: @ViewBag.productPrices[i] per kg</div>
                                     <div>Total Price: RM @Math.Round(ViewBag.totalPrices[i], 2).ToString()</div>
 
-                                    @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS)
+                                    @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS || @ViewBag.orderStatuses[i] == Status.IN_TRANSIT)
                                     {
-                                        <script>
-                                            var select = document.getElementById(idname);
-                                            var value = select.options[select.selectedIndex].value;
-                                        </script>
                                         <div class="fifteen">
                                             <form method="post" asp-action="ChangeOrderStatus" asp-controller="Customer">
                                                 <input type="hidden" name="OrderID" value="@ViewBag.orderIds[i]" />
-
-                                                @switch (@ViewBag.orderStatuses[i])
-                                                {
-                                                    case Status.IN_PROGRESS:
-                                                        status = 0;
-                                                        break;
-                                                    case Status.IN_TRANSIT:
-                                                        status = 1;
-                                                        break;
-                                                    case Status.RECEIVED:
-                                                        status = 2;
-                                                        break;
-                                                    case Status.CANCELLED:
-                                                        status = 3;
-                                                        break;
-                                                    default:
-                                                        status = 0;
-                                                        break;
-                                                }
-
                                                 Order Status:
-                                                <select name="SOrderStatus" id="@idname">
+                                                <select name="SOrderStatus">
                                                     <option value=0 selected disabled hidden>
-                                                        IN_PROGRESS
+                                                        @ViewBag.orderStatuses[i]
                                                     </option>
                                                     <option value=2>
                                                         RECEIVED
                                                     </option>
-                                                    <option value=3>
+                                                    @if (!(@ViewBag.orderStatuses[i] == Status.IN_TRANSIT))
+                                                     {
+                                                        <option value=3>
                                                         CANCELLED
-                                                    </option>
+                                                        </option>
+                                                     }
+                                                    
                                                 </select>
-                                                <input type="submit" value="Change Status" class="action-button" />
-
+                                                <input type="submit" value="Change Status" class="action-button"/>
                                             </form>
                                         </div>
                                     }
@@ -114,6 +91,7 @@
     img {
         object-fit: cover;
         width: 40%;
+        max-width: 300px;
         height: 200px;
     }
 
