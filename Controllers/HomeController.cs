@@ -58,8 +58,6 @@ namespace farm2plate.Controllers
             }
             return View();
         }
-
-
         public IActionResult Privacy()
         {
             return View();

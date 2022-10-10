@@ -91,8 +91,7 @@ namespace farm2plate.Controllers
 
             ViewBag.BucketName = Environment.GetEnvironmentVariable("AWS_IMAGE_BUCKET_NAME");
 
-            if (ordersCount > 0)
-            {
+            if (ordersCount > 0) {
                 ViewBag.hasOrders = true;
             } else ViewBag.hasOrders = false;
             return View();
@@ -105,8 +104,6 @@ namespace farm2plate.Controllers
             string CustomerPhoneNumber = _context.Users.FindAsync(sorder.UserID).Result.PhoneNumber;
             SNSService service = new SNSService();
             service.SendSMS(CustomerPhoneNumber, $"Order {OrderID} is {SOrderStatus.ToString()}");
-
-            System.Diagnostics.Debug.WriteLine($"!!! sorder {sorder} SOrderStatus {SOrderStatus} OrderID {OrderID}");
 
             var order = await _context.SOrders.FindAsync(OrderID);
             ViewBag.OldOrderStatus = order.SOrderStatus;
@@ -144,26 +141,65 @@ namespace farm2plate.Controllers
             _context.SOrders.Add(sorder);
 
             product.ProductQuantity = (double)(product.ProductQuantity - ProductQuantity);
-
-             await _context.SaveChangesAsync();
-
-
-            //System.Diagnostics.Debug.WriteLine($"Product Name {product.ProductName}");
+            await _context.SaveChangesAsync();
             return View(sorder);
         }
 
         public async Task<IActionResult> Index()
         {
+            var _user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+
+            bool phoneExists = false;
+            if (_user.PhoneNumber != null)
+                phoneExists = true;
+            bool verified = _user.PhoneIsVerified;
+
+            ViewBag.PhoneExists = phoneExists;
+            ViewBag.PhoneIsVerified = verified;
+
             var shops = _context.Shops;
             ViewBag.Shops = shops;
             return View();
         }
 
-        /*public LocalRedirectResult LocalRedirect()
+        public IActionResult VerifyPhoneNumberView()
         {
-            return LocalRedirect("/customer");
-        }*/ // same as RedirectCustomerHome
+            return View();
+        }
 
+        public async Task<IActionResult> VerifyPhoneNumber(string token)
+        {
+            var _user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            string number = _user.PhoneNumber;
+            SNSService service = new SNSService();
+            await service.ConfirmSandbox(token, number);
+            if (await service.IsNumberConfirmed(number)) {
+                _user.PhoneIsVerified = true;
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Customer");
+            }
+            ViewBag.Error = "Invalid/Expired token!";
+            return RedirectToAction("VerifyPhoneNumberView", "Customer");
+        }
+
+        public string formatNumber(string number)
+        {
+            if (!number.Contains("+6"))
+                return "+6" + number;
+            return number;
+        }
+
+        public async Task<IActionResult> AddPhoneNumber(string PhoneNumber)
+        {
+            var _user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            SNSService service = new SNSService();
+            PhoneNumber = formatNumber(PhoneNumber);
+            _user.PhoneNumber = PhoneNumber;
+            await _context.SaveChangesAsync();
+            service.AddToSandbox(PhoneNumber);
+            service.AddSubscriberSMS(PhoneNumber);
+            return RedirectToAction("Index", "Customer");
+        }
         public RedirectToActionResult RedirectCustomerHome()
         {
             return RedirectToAction("Index", "Customer");

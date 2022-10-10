@@ -15,13 +15,11 @@ namespace farm2plate.Controllers
         private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
         // private ApplicationUser _user;
         private readonly ApplicationDbContext _context;
-
         public AdminController(Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _context = context;
         }
-
 
         public async Task<IActionResult> ViewAllOrder()
         {
@@ -43,11 +41,9 @@ namespace farm2plate.Controllers
                 Shop shop = await _context.Shops.FindAsync(order.ShopID);
                 productNamesList.Add(product.ProductName);
                 shopNamesList.Add(shop.ShopName);
-
             }
             System.Diagnostics.Debug.WriteLine($"!!!! SOrders {productNamesList} ");
             System.Diagnostics.Debug.WriteLine($"!!!! SOrders {shopNamesList} ");
-
 
             ViewBag.productNames = productNamesList;
             ViewBag.shopNames = shopNamesList;
@@ -64,9 +60,7 @@ namespace farm2plate.Controllers
 
         public IActionResult Index()
         {
-           
             return View();
-
         }
     }
 }

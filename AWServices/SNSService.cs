@@ -62,7 +62,7 @@ namespace farm2plate.AWServices
 
         }
 
-        public async void ConfirmSandbox(string otp, string phone) {
+        public async Task<bool> ConfirmSandbox(string otp, string phone) {
             VerifySMSSandboxPhoneNumberRequest sandboxRequest = new VerifySMSSandboxPhoneNumberRequest {
                 OneTimePassword = otp,
                 PhoneNumber = phone
@@ -70,9 +70,11 @@ namespace farm2plate.AWServices
             try {
                 VerifySMSSandboxPhoneNumberResponse sandboxResponse = await SNSClient.VerifySMSSandboxPhoneNumberAsync(sandboxRequest);
                 System.Diagnostics.Debug.WriteLine($"SANDBOX CONFIRM SUCCESS: {sandboxResponse.HttpStatusCode}");
+                return true;
             } 
             catch (Exception ex) {
                 System.Diagnostics.Debug.WriteLine($"SANDBOX CONFIRM FAILED: {ex.Message}");
+                return false;
             }
         }
 

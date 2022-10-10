@@ -7,13 +7,13 @@
 
 <h1> My Orders </h1>
 @{
-
     if (ViewBag.hasOrders)
     {
         <div class="order-catalogue">
             @for (var i = 0; i < ViewBag.orders.Count; i++)
             {
-                string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
+                string ImageURL = $"https://d1maye6p54gee6.cloudfront.net/{@ViewBag.productImages[i]}";
+
             <div class="order-card">
                 <div class="shop-name">@ViewBag.shopNames[i]</div>
                 <div class="order-content">

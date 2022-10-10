@@ -62,6 +62,7 @@ namespace farm2plate.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> UploadNewProduct(IFormFile ProductImage, [Bind("ProductName", "ProductPrice", "ProductQuantity")] Product product)
         {
+
             product.ShopID = await GetShopID();
             S3Service service = new S3Service();
             // Returns (upload result, errormsg/URL)
@@ -118,10 +119,9 @@ namespace farm2plate.Controllers
 
         public async Task<IActionResult> VerifyPhoneNumber(string token) {
             ApplicationUser user = await GetUser();
-            System.Diagnostics.Debug.WriteLine($"Token is {token}");
             string number = user.PhoneNumber;
             SNSService service = new SNSService();
-            service.ConfirmSandbox(token, number);
+            await service.ConfirmSandbox(token, number);
             if (await service.IsNumberConfirmed(number)) {
                 user.PhoneIsVerified = true;
                 await _context.SaveChangesAsync();
@@ -192,21 +192,6 @@ namespace farm2plate.Controllers
             }
 
             return RedirectToAction("Index", "Vendor");
-
-            // System.Diagnostics.Debug.WriteLine($"Initializing SNS");
-            //SNSService SNSService = new SNSService();
-
-            //System.Diagnostics.Debug.WriteLine($"Initialized SNS");
-
-            // SNSService.AddToSandbox(phone3);
-            // SNSService.ConfirmSandbox("291627", phone3);
-
-            // SNSService.AddSubscriberSMS(phone1);
-            // SNSService.AddSubscriberSMS(phone3);
-            //SNSService.SendSMS("+601111856340", "TEST");
-            //SNSService.SendSMS("+601120819021", "TEST");
-
-            //return View();
         }
 
         public async Task<IActionResult> Index() {
@@ -226,10 +211,8 @@ namespace farm2plate.Controllers
                 ViewBag.Products = _shop.Products;
             }
             bool phoneExists = false;
-            if (_user.PhoneNumber != null) {
+            if (_user.PhoneNumber != null) 
                 phoneExists = true;
-            }
-            System.Diagnostics.Debug.WriteLine($"PHONE IS {phoneExists}");
             bool verified = _user.PhoneIsVerified;
             ViewBag.PhoneExists = phoneExists;
             ViewBag.PhoneIsVerified = verified;

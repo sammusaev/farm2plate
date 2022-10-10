@@ -3,7 +3,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    var imageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{ViewBag.ProductImage}";
+    var imageURL = $"https://d1maye6p54gee6.cloudfront.net/{ViewBag.ProductImage}";
     <h1>Your Order has been placed</h1>
     <h2>Seller @ViewBag.ShopName has been notified. (Order Status: @Model.SOrderStatus)</h2>
     <form asp-action="RedirectCustomerHome" asp-controller="Customer" method="get">
@@ -21,49 +21,50 @@
     </div>
 }
 
-        <style>
-            h1 {
-                margin-top: 2rem;
-            }
+<style>
+    h1 {
+        margin-top: 2rem;
+    }
 
-            body {
-                background-color: #EBEBE8;
-            }
+    body {
+        background-color: #EBEBE8;
+    }
 
-            img {
-                object-fit: cover;
-                width: 40%;
-                height: 200px;
-            }
+    img {
+        object-fit: cover;
+        width: 40%;
+        height: 200px;
+    }
 
-            .order-card {
-                display: flex;
-                justify-content: space-between;
-                margin: 2rem 0 2rem 0;
-                padding: 1.5rem;
-                padding-top: 1rem;
-                border-radius: 8px;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-                transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-                background-color: #fff;
-                flex-wrap: wrap;
-            }
+    .order-card {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0 2rem 0;
+        padding: 1.5rem;
+        padding-top: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        background-color: #fff;
+        flex-wrap: wrap;
+    }
 
-            .order-details {
-                margin-top: 1rem;
-                width: 100%;
-                margin-left: 1rem;
-            }
+    .order-details {
+        margin-top: 1rem;
+        width: 100%;
+        margin-left: 1rem;
 
-            .action-button {
-                background-color: #D1E2C4;
-                color: #31352E;
-                border-radius: 4px;
-                padding: 0 8px 0 8px;
-                border: none;
-            }
+    }
 
-                .action-button:hover {
-                    background-color: #d6e8c9;
-                }
-        </style>
+    .action-button {
+        background-color: #D1E2C4;
+        color: #31352E;
+        border-radius: 4px;
+        padding: 0 8px 0 8px;
+        border: none;
+    }
+
+        .action-button:hover {
+            background-color: #d6e8c9;
+        }
+</style>

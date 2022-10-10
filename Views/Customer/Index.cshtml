@@ -6,6 +6,30 @@
 @{
     ViewData["Title"] = "Customer Home";
 
+    bool phoneExists = ViewBag.PhoneExists;
+    bool verified = ViewBag.PhoneIsVerified;
+
+    <center>
+        @if (!phoneExists) {
+            <div>
+                <p color="red"> You haven't added a phone number yet </p>
+                <form asp-action="AddPhoneNumber" method="post" asp-controller="Customer">
+                    <input type="text" id="txtName" name="PhoneNumber" placeholder="+60..." />
+                    <input type="submit" value="Add Number" />
+                </form>
+            </div>
+            <br />
+        }
+
+        @if (phoneExists && !verified) {
+            <div>
+                <p color="red"> You haven't verified your phone number </p>
+                <a asp-action="VerifyPhoneNumberView">Verify Now</a>
+            </div>
+            <br />
+        }
+    </center>
+
     <form asp-action="ViewOrders" asp-controller="Customer" method="get">
         <input type="submit" value="My Orders" class="direct-button" />
     </form>
@@ -17,15 +41,11 @@
             <div class="shop-name">@s.ShopName</div>
             <form asp-action="ViewShop" asp-controller="Customer" method="get">
                 <input type="hidden" asp-for="ShopID" value="@s.ShopID" />
-                <input type="submit" value="Visit Shop" class="action-button"/>
+                <input type="submit" value="Visit Shop" class="action-button" />
             </form>
         </div>
     }
-
-    //card for s
-    // clicks asp-rooute s.Id
-    // shops/:id
-}
+ }
 
 
 
@@ -42,9 +62,9 @@
         border: none;
     }
 
-    .direct-button:hover {
-         background-color: #8ba03e;
-    }
+        .direct-button:hover {
+            background-color: #8ba03e;
+        }
 
     .shop-card {
         display: flex;
@@ -69,7 +89,7 @@
         border: none;
     }
 
-    .action-button:hover {
-        background-color: #d6e8c9;
-    }
+        .action-button:hover {
+            background-color: #d6e8c9;
+        }
 </style>

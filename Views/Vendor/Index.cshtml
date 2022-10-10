@@ -21,7 +21,7 @@
         <br />
         }
 
-        @if (!verified) {
+        @if (phoneExists && !verified) {
         <div>
             <p color="red"> You haven't verified your phone number </p>
             <a asp-action="VerifyPhoneNumberView">Verify Now</a>
@@ -57,7 +57,7 @@
         <div class="wrapper">
         @foreach (Product p in Products)
         {
-            string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@p.ProductImage}";
+            string ImageURL = $"http://d1maye6p54gee6.cloudfront.net/{@p.ProductImage}";
             <div class="card">
                 <center>
                     <div class="fill">
@@ -75,7 +75,7 @@
                 <br style="clear:both;" />
             </div>
 
-                    }
+        }
         </div>
 
     }

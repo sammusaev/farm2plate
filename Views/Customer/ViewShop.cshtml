@@ -16,7 +16,7 @@
         <div class="product-catalogue">
             @foreach (var product in Model.Products)
             {
-            string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@product.ProductImage}";
+            string ImageURL = $"https://d1maye6p54gee6.cloudfront.net/{@product.ProductImage}";
             <div class="product-card">
                 <div class="product-details">
                     <img src="@ImageURL" width="200" height="200" />
@@ -46,7 +46,6 @@
             }
         </div>
     }
-
 }
 
 
