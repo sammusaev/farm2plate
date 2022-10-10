@@ -34,8 +34,8 @@
                             <input type="hidden" name="ProductName" value="@product.ProductName" />
                             <input type="hidden" name="ProductPrice" value="@product.ProductPrice" />
                             <input type="hidden" name="ProductID" value="@product.ProductID" />
-                            <input type="number" name="ProductQuantity" min="0.01" value="1" max="@product.ProductQuantity" placeholder="1" step=".01" /> kg
-                            <p>(@product.ProductQuantity kg left)</p>
+                            <input type="number" name="ProductQuantity" min="0.01" value="1" max="@product.ProductQuantity" placeholder="1" step=".01" style="max-width: 80px"/> kg
+                            <div>(@Math.Round(product.ProductQuantity,2) kg left)</div>
                             <input type="submit" value="Place Order" class="action-button" />
                         </form>
                     </div>

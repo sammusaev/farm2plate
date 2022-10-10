@@ -13,7 +13,6 @@
         <div class="order-catalogue">
             @for (var i = 0; i < ViewBag.orders.Count; i++)
             {
-                string idname = $"changestatus-{@ViewBag.orderIds[i]}";
                 string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
                 int status;
             <div class="order-card">
@@ -35,35 +34,11 @@
 
                                     @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS)
                                     {
-                                        <script>
-                                            var select = document.getElementById(idname);
-                                            var value = select.options[select.selectedIndex].value;
-                                        </script>
                                         <div class="fifteen">
                                             <form method="post" asp-action="ChangeOrderStatus" asp-controller="Customer">
                                                 <input type="hidden" name="OrderID" value="@ViewBag.orderIds[i]" />
-
-                                                @switch (@ViewBag.orderStatuses[i])
-                                                {
-                                                    case Status.IN_PROGRESS:
-                                                        status = 0;
-                                                        break;
-                                                    case Status.IN_TRANSIT:
-                                                        status = 1;
-                                                        break;
-                                                    case Status.RECEIVED:
-                                                        status = 2;
-                                                        break;
-                                                    case Status.CANCELLED:
-                                                        status = 3;
-                                                        break;
-                                                    default:
-                                                        status = 0;
-                                                        break;
-                                                }
-
                                                 Order Status:
-                                                <select name="SOrderStatus" id="@idname">
+                                                <select name="SOrderStatus">
                                                     <option value=0 selected disabled hidden>
                                                         IN_PROGRESS
                                                     </option>
@@ -74,8 +49,7 @@
                                                         CANCELLED
                                                     </option>
                                                 </select>
-                                                <input type="submit" value="Change Status" class="action-button" />
-
+                                                <input type="submit" value="Change Status" class="action-button"/>
                                             </form>
                                         </div>
                                     }
@@ -114,6 +88,7 @@
     img {
         object-fit: cover;
         width: 40%;
+        max-width: 300px;
         height: 200px;
     }
 
