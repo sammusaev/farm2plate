@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using farm2plate.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Amazon.XRay.Recorder.Core; 
+using Amazon.XRay.Recorder.Handlers.AwsSdk;
 
 namespace farm2plate
 {
@@ -69,6 +71,8 @@ namespace farm2plate
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            AWSXRayRecorder.InitializeInstance(configuration: Configuration);
+            AWSSDKHandler.RegisterXRayForAllServices();
         }
 
         public IConfiguration Configuration { get; }

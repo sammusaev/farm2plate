@@ -1,0 +1,20 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Debug",
+    "framework"     : "netcoreapp3.1",
+    "self-contained" : false,
+    "application"    : "farm2plate",
+    "environment"    : "farm2plate-prod",
+    "enable-xray"    : true,
+    "enhanced-health-type" : "enhanced",
+    "additional-options"   : "",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.4.0 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "farm2plate",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "farm2plate-ec2-keypair",
+    "instance-profile"     : "LabInstanceProfile",
+    "service-role"         : "LabRole",
+    "proxy-server"         : "nginx"
+}

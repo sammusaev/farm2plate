@@ -6,6 +6,7 @@ using farm2plate.Models;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System;
+using farm2plate.AWServices;
 
 namespace farm2plate.Controllers
 {
@@ -101,6 +102,9 @@ namespace farm2plate.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangeOrderStatus([Bind("SOrderStatus")] SOrder sorder, int? OrderID, Status SOrderStatus)
         {
+            string CustomerPhoneNumber = _context.Users.FindAsync(sorder.UserID).Result.PhoneNumber;
+            SNSService service = new SNSService();
+            service.SendSMS(CustomerPhoneNumber, $"Order {OrderID} is {SOrderStatus.ToString()}");
 
             System.Diagnostics.Debug.WriteLine($"!!! sorder {sorder} SOrderStatus {SOrderStatus} OrderID {OrderID}");
 
