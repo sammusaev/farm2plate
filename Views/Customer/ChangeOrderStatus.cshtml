@@ -6,7 +6,7 @@
     {
         <div>
             <h1>Your Order Status has been Changed</h1>
-            <h2>Order ID #@ViewBag.OrderID is changed from IN_PROGRESS to @ViewBag.NewOrderStatus</h2>
+            <h2>Order ID #@ViewBag.OrderID is changed from @ViewBag.OldOrderStatus to @ViewBag.NewOrderStatus</h2>
             <form asp-action="RedirectViewOrders" asp-controller="Customer" method="get">
                 <input type="submit" value="Go back to My Orders" class="action-button"/>
             </form>

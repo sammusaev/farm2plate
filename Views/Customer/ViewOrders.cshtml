@@ -5,7 +5,7 @@
 @{
 }
 
-<h1> Sordersss </h1>
+<h1> My Orders </h1>
 @{
 
     if (ViewBag.hasOrders)
@@ -14,7 +14,6 @@
             @for (var i = 0; i < ViewBag.orders.Count; i++)
             {
                 string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
-                int status;
             <div class="order-card">
                 <div class="shop-name">@ViewBag.shopNames[i]</div>
                 <div class="order-content">
@@ -32,7 +31,7 @@
                                     <div>Unit Price: @ViewBag.productPrices[i] per kg</div>
                                     <div>Total Price: RM @Math.Round(ViewBag.totalPrices[i], 2).ToString()</div>
 
-                                    @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS)
+                                    @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS || @ViewBag.orderStatuses[i] == Status.IN_TRANSIT)
                                     {
                                         <div class="fifteen">
                                             <form method="post" asp-action="ChangeOrderStatus" asp-controller="Customer">
@@ -40,14 +39,18 @@
                                                 Order Status:
                                                 <select name="SOrderStatus">
                                                     <option value=0 selected disabled hidden>
-                                                        IN_PROGRESS
+                                                        @ViewBag.orderStatuses[i]
                                                     </option>
                                                     <option value=2>
                                                         RECEIVED
                                                     </option>
-                                                    <option value=3>
+                                                    @if (!(@ViewBag.orderStatuses[i] == Status.IN_TRANSIT))
+                                                     {
+                                                        <option value=3>
                                                         CANCELLED
-                                                    </option>
+                                                        </option>
+                                                     }
+                                                    
                                                 </select>
                                                 <input type="submit" value="Change Status" class="action-button"/>
                                             </form>

@@ -105,6 +105,7 @@ namespace farm2plate.Controllers
             System.Diagnostics.Debug.WriteLine($"!!! sorder {sorder} SOrderStatus {SOrderStatus} OrderID {OrderID}");
 
             var order = await _context.SOrders.FindAsync(OrderID);
+            ViewBag.OldOrderStatus = order.SOrderStatus;
             order.SOrderStatus = SOrderStatus;
             await _context.SaveChangesAsync();
 
