@@ -45,6 +45,23 @@ namespace farm2plate.AWServices
             }
         }
 
+        public async Task<bool> IsNumberConfirmed(string number) {
+            ListSMSSandboxPhoneNumbersRequest sandboxRequest = new ListSMSSandboxPhoneNumbersRequest();
+            try {
+                ListSMSSandboxPhoneNumbersResponse sandboxResponse = await SNSClient.ListSMSSandboxPhoneNumbersAsync(sandboxRequest);
+                foreach (SMSSandboxPhoneNumber phone in sandboxResponse.PhoneNumbers) {
+                    if (phone.PhoneNumber.Contains(number) && phone.Status == SMSSandboxPhoneNumberVerificationStatus.Verified) {
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine($"SANDBOX CONFIRMATION CHECK FAILED: {ex.Message}");
+            }
+            return false;
+
+        }
+
         public async void ConfirmSandbox(string otp, string phone) {
             VerifySMSSandboxPhoneNumberRequest sandboxRequest = new VerifySMSSandboxPhoneNumberRequest {
                 OneTimePassword = otp,

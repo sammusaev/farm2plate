@@ -79,7 +79,15 @@ namespace farm2plate.Controllers
             }
         }
 
+        public async void removePlease()
+        {
+            SNSService service = new SNSService();
+            bool it = await service.IsNumberConfirmed("+601111856340");
+            System.Diagnostics.Debug.WriteLine($"YOUR NUMBER IS {it}");
+        }
+
         public async Task<IActionResult> EditProduct([Bind("ProductName", "ProductPrice", "ProductQuantity")] Product product, int ProductID) {
+            removePlease();
             System.Diagnostics.Debug.WriteLine($"PRODUCT ID {product.ProductImage}");
             Product p = await _context.Products.FindAsync(ProductID);
             p.ProductName = product.ProductName;
@@ -101,7 +109,6 @@ namespace farm2plate.Controllers
             order.SOrderStatus = Status.IN_TRANSIT;
             await _context.SaveChangesAsync();
             return RedirectToAction("ViewOrdersView", "Vendor");
-
         }
 
         public async Task<IActionResult> ViewOrdersView()

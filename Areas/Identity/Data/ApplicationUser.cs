@@ -14,6 +14,8 @@ namespace farm2plate.Areas.Identity.Data
         public string FirstName { get; set; }
         [PersonalData]
         public string LastName { get; set; }
+        
+        public bool PhoneIsVerified { get; set; }
         public ICollection<Shop> Shops { get; set; } // For Vendors
         public ICollection<SOrder> SOrders { get; set; } // For Customers
     }
