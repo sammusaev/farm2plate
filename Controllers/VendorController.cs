@@ -133,7 +133,6 @@ namespace farm2plate.Controllers
                 ViewBag.ProductNames = ProductNames;
                 ViewBag.UserNames = UserNames;
             }
-
             return View();
         }
 
@@ -193,6 +192,13 @@ namespace farm2plate.Controllers
                 await _context.Entry(_shop).Collection(x => x.Products).LoadAsync();
                 ViewBag.Products = _shop.Products;
             }
+            bool phoneExists = false;
+            if (_user.PhoneNumber != null) {
+                phoneExists = true;
+            }
+            System.Diagnostics.Debug.WriteLine($"PHONE IS {phoneExists}");
+            bool verified = _user.PhoneIsVerified;
+            ViewBag.PhoneIsVerified = verified;
             return View();
         }
     }

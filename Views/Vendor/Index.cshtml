@@ -14,6 +14,9 @@
 </script>
 
 @{
+    
+
+
     var HasShop = ViewBag.HasShop;
     if (!HasShop)
     {
@@ -26,7 +29,7 @@
         </div>
     }
 
-    else
+    if (HasShop)
     {
         var Shop = ViewBag.Shop;
         var Products = ViewBag.Products;
