@@ -23,12 +23,10 @@ namespace farm2plate
             IdentityResult roleResult;
 
             // Checking if roles exist
-            foreach (var roleTitle in roleTitles)
-            {
+            foreach (var roleTitle in roleTitles) {
                 var roleExists = await RoleManager.RoleExistsAsync(roleTitle);
                 // Create them if they don't 
-                if (!roleExists)
-                {
+                if (!roleExists) {
                     Console.WriteLine("Adding role: ", roleTitle);
                     roleResult = await RoleManager.CreateAsync(new IdentityRole(roleTitle));
                 }
@@ -41,11 +39,9 @@ namespace farm2plate
             // Check if superadmin exists
             var _superAdmin = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminEmail"]);
             
-            if (_superAdmin == null)
-            {
+            if (_superAdmin == null) {
                 // Create a superadmin if it doesn't already exist
-                var SuperAdminApplicationUser = new ApplicationUser
-                {
+                var SuperAdminApplicationUser = new ApplicationUser {
                     UserName = Configuration["AppSettings:AdminEmail"],
                     Email = Configuration["AppSettings:AdminEmail"],
                     FirstName = Configuration["AppSettings:AdminFirstName"],
@@ -55,13 +51,11 @@ namespace farm2plate
                 string SuperAdminPassword = Configuration["AppSettings:AdminPassword"];
 
                 var createSuperAdmin = await UserManager.CreateAsync(SuperAdminApplicationUser, SuperAdminPassword);
-                if (createSuperAdmin.Succeeded)
-                {
+                if (createSuperAdmin.Succeeded) {
                     await UserManager.AddToRoleAsync(SuperAdminApplicationUser, "Admin");
                     Console.WriteLine("SuperAdmin has been created");
                 } 
-                else
-                {
+                else {
                     Console.WriteLine("Failed to create admin");
                 }
             } 
@@ -97,25 +91,24 @@ namespace farm2plate
             IApplicationBuilder app, 
             IWebHostEnvironment env, 
             IServiceProvider serviceProvider,
-            ApplicationDbContext context)
-        {
+            ApplicationDbContext context) {
 
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
+            else {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseXRay("farm2plate");
+
             app.UseStaticFiles();
 
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
+            app.UseEndpoints(endpoints => {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
