@@ -95,6 +95,41 @@ namespace farm2plate.Controllers
             return View();
         }
 
+        public async Task<IActionResult> UpdateOrderStatus(int SOrderID)
+        {
+            SOrder order = await _context.SOrders.FindAsync(SOrderID);
+            order.SOrderStatus = Status.IN_TRANSIT;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ViewOrdersView", "Vendor");
+
+        }
+
+        public async Task<IActionResult> ViewOrdersView()
+        {
+            Shop s = await _context.Shops.FindAsync(await GetShopID());
+            await _context.Entry(s).Collection(x => x.SOrders).LoadAsync();
+            int orderCount = s.SOrders.Count();
+            if (orderCount != 0)
+            {
+                List<string> ProductNames = new List<string>();
+                List<string> UserNames = new List<string>();
+
+                foreach (SOrder o in s.SOrders)
+                {
+                    ProductNames.Add(_context.Products.FindAsync(o.ProductID).Result.ProductName);
+                    ApplicationUser user = await _context.Users.FindAsync(o.UserID);
+                    UserNames.Add($"{user.LastName},{user.FirstName}");
+                }
+
+                ViewBag.OrderCount = orderCount;
+                ViewBag.Orders = s.SOrders.ToList();
+                ViewBag.ProductNames = ProductNames;
+                ViewBag.UserNames = UserNames;
+            }
+
+            return View();
+        }
+
         public async Task<IActionResult> EditProductView(int? ProductID) {
             if (ProductID != null) {
                 Product Product = await _context.Products.FindAsync(ProductID);
@@ -106,18 +141,31 @@ namespace farm2plate.Controllers
             return RedirectToAction("Index", "Vendor");
         }
 
-        public void DeleteProductView() {
-            System.Diagnostics.Debug.WriteLine($"Initializing SNS");
-            SNSService SNSService = new SNSService();
-            System.Diagnostics.Debug.WriteLine($"Initialized SNS");
+        public async Task<IActionResult> DeleteProduct(int? ProductID) {
+            if (ProductID != null) {
+                Product Product = await _context.Products.FindAsync(ProductID);
+                if (Product != null) {
+                    _context.Products.Remove(Product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "Vendor");
+                }
+                return RedirectToAction("Index", "Vendor");
+            }
+
+            return RedirectToAction("Index", "Vendor");
+
+            // System.Diagnostics.Debug.WriteLine($"Initializing SNS");
+            //SNSService SNSService = new SNSService();
+
+            //System.Diagnostics.Debug.WriteLine($"Initialized SNS");
 
             // SNSService.AddToSandbox(phone3);
             // SNSService.ConfirmSandbox("291627", phone3);
 
             // SNSService.AddSubscriberSMS(phone1);
             // SNSService.AddSubscriberSMS(phone3);
-            SNSService.SendSMS("+601111856340", "TEST");
-            SNSService.SendSMS("+601120819021", "TEST");
+            //SNSService.SendSMS("+601111856340", "TEST");
+            //SNSService.SendSMS("+601120819021", "TEST");
 
             //return View();
         }

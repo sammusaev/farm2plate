@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "ViewOrdersView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>ViewOrdersView</h1>
+
+@{ 
+    var Orders = ViewBag.Orders;
+    var ProductNames = ViewBag.ProductNames;
+    var UserNames = ViewBag.UserNames;
+
+    bool haveOrders = false;
+    if (ViewBag.OrderCount != 0) {
+        haveOrders = true;
+    } 
+    
+    if (!haveOrders) {
+        <h1> You don't have any orders yet </h1>
+    }
+    else {
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        @for (int i = 0; i < ViewBag.OrderCount; i ++) {
+            <tr>
+                <td> @Orders[i].SOrderID </td>
+                <td> @UserNames[i] </td>
+                <td> @ProductNames[i] </td>
+                <td> @Orders[i].ProductQuantity </td>
+                <td> 
+                1 mirrion dorrar 
+                </td>
+                <td>
+                    @if (Orders[i].SOrderStatus == 0)
+                    {
+                        <select name="SOrderStatus">
+                            <option value=0 selected disabled hidden>@Orders[i].SOrderStatus.ToString()</option>
+                            <option value=1>@Status.IN_TRANSIT</option>
+                        </select>
+                        <a class="btn-dark" asp-action="UpdateOrderStatus" asp-route-SOrderID="@Orders[i].SOrderID"> Update Status </a>
+                    }
+                    else
+                    {
+                        @Orders[i].SOrderStatus.ToString()
+                    }
+                </td>
+            </tr>
+        }
+        </table>
+    }
+}
+
+<style>
+
+    table {
+        text-align: left;
+        position: relative;
+        border-collapse: collapse;
+        background-color: #f6f6f6;
+    }
+    /* Spacing */
+    td, th {
+        border: 1px solid #999;
+        padding: 20px;
+    }
+
+    th {
+        background: brown;
+        color: white;
+        border-radius: 0;
+        position: sticky;
+        top: 0;
+        padding: 10px;
+    }
+
+    .primary {
+        background-color: #000000
+    }
+
+    tfoot > tr {
+        background: black;
+        color: white;
+    }
+
+    tbody > tr:hover {
+        background-color: #ffc107;
+    }
+</style>
+
+
