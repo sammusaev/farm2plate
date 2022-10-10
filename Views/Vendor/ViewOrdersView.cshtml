@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1> Orders </h1>
+<h1 class="title"> Orders </h1>
 
 @{ 
     var Orders = ViewBag.Orders;
@@ -57,43 +57,63 @@
 
 <style>
 
+    * {
+        text-decoration: none !important;
+        outline: none;
+    }
+
+    h1 {
+        font-family: 'Helvetica Neue' !important;
+    }
+
+    select {
+        padding: 6px;
+    }
+
+    .title {
+        margin-top: 2rem;
+    }
+
     table {
         text-align: left;
         position: center;
         border-collapse: collapse;
         background-color: #f6f6f6;
+        margin-top: 2rem;
     }
 
     td, th {
         border: 1px solid #999;
         padding: 20px;
         text-align: center;
-        font: 12px 'Helvetica Neue';
+        font-family: 'Helvetica Neue';
     }
 
     th {
-        background: #DA713D;
-        color: white;
+        background: #3B0918;
+        color: #FFF3D9;
         border-radius: 0;
         position: sticky;
         top: 0;
         padding: 10px;
-        font: 16px 'Helvetica Neue';
+        font-family: 'Helvetica Neue';
         font-weight: bold;
     }
 
     .menu-button {
-        font: 16px 'Helvetica Neue';
+        border-radius: 4px;
+        font-family: 'Helvetica Neue';
         text-decoration: none;
-        background-color: #DA713D;
-        color: #040404;
-        padding: 5px 6px 5px 6px;
+        background-color: #DC4731;
+        color: #000;
+        text-align: center;
+        padding: 8px;
     }
 
 
     .menu-button:hover {
-        background-color: #ED631F;
-        color: #040404;
+        background-color: #B8390E;
+        color: #FFF3D9;
     }
 
     .primary {
@@ -106,7 +126,8 @@
     }
 
     tbody > tr:hover {
-        background-color: #ffc107;
+        background-color: #FFF3D9;
+        color: #3B0918;
     }
 
     h1 {
