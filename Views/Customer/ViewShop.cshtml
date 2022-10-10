@@ -6,38 +6,134 @@
 }
 
 @{
-    <h1> @Model.ShopName</h1>
+    <h1>@Model.ShopName</h1>
     if (Model.Products.Count == 0)
     {
-        <p>there are no products</p>
+        <p>There are no products.</p>
     }
     else
     {
-        foreach (var product in Model.Products)
-        {
-            string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@product.ProductImage}";
-            <img src="@ImageURL" width="200" height="200" />
-            <h2>@product.ProductName</h2>
-            <h3>RM @product.ProductPrice per kg</h3> 
-            if (@product.ProductQuantity > 0)
+        <div class="product-catalogue">
+            @foreach (var product in Model.Products)
             {
-                <form method="post" asp-action="Order" asp-controller="Customer">
-                    <input type="hidden" name="ShopID" value="@Model.ShopID" />
-                    <input type="hidden" name="ShopName" value="@Model.ShopName" />
-                    <input type="hidden" name="ProductImage" value="@product.ProductImage" />
-                    <input type="hidden" name="ProductName" value="@product.ProductName" />
-                    <input type="hidden" name="ProductPrice" value="@product.ProductPrice" />
-                    <input type="hidden" name="ProductID" value="@product.ProductID" />
-                    <input type="number" name="ProductQuantity" min="0.01" value="1" max="@product.ProductQuantity" placeholder="1" step=".01" /> kg
-                    <p>(@product.ProductQuantity kg left)</p>
-                    <input type="submit" value="Place Order" />
-                </form>
+            string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@product.ProductImage}";
+            <div class="product-card">
+                <div class="product-details">
+                    <img src="@ImageURL" width="200" height="200" />
+                    <div class="product-name">@product.ProductName</div>
+                    <div class="product-price">RM @product.ProductPrice per kg</div>
+                </div>
+
+                @if (@product.ProductQuantity > 0)
+                {
+                    <div class="product-order">
+                        <form method="post" asp-action="Order" asp-controller="Customer">
+                            <input type="hidden" name="ShopID" value="@Model.ShopID" />
+                            <input type="hidden" name="ShopName" value="@Model.ShopName" />
+                            <input type="hidden" name="ProductImage" value="@product.ProductImage" />
+                            <input type="hidden" name="ProductName" value="@product.ProductName" />
+                            <input type="hidden" name="ProductPrice" value="@product.ProductPrice" />
+                            <input type="hidden" name="ProductID" value="@product.ProductID" />
+                            <input type="number" name="ProductQuantity" min="0.01" value="1" max="@product.ProductQuantity" placeholder="1" step=".01" /> kg
+                            <p>(@product.ProductQuantity kg left)</p>
+                            <input type="submit" value="Place Order" class="action-button" />
+                        </form>
+                    </div>
+                }
+                else
+                {<div class="out-of-stock">This product is not available</div>}
+            </div>
             }
-            else
-            {<p>This product is not available</p>}
-        }
+        </div>
     }
 
-
-
 }
+
+
+<style>
+    h1 {
+        margin-top: 2rem;
+    }
+
+    body {
+        background-color: #EBEBE8;
+    }
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 250px;
+        padding: 10px 10px 10px 10px;
+    }
+
+    .product-catalogue {
+        display: flex;
+        flex-wrap: wrap-reverse;
+        justify-content: space-around;
+        flex-direction: row-reverse;
+    }
+
+    .direct-button {
+        background-color: #778A35;
+        color: #EBEBE8;
+        border-radius: 4px;
+        padding: 8px;
+        border: none;
+    }
+
+     .direct-button:hover {
+         background-color: #8ba03e;
+     }
+
+    .product-card {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0 2rem 0;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        background-color: #fff;
+        width: 40%;
+    }
+
+    .product-details {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width:60%;
+    }
+
+    .product-order {
+        width: 40%;
+        padding: 10px;   
+    }
+
+    .product-name {
+        font-size: 1.5rem;
+        width: 100%;
+        margin: 1rem 0 1rem 0;
+    }
+
+    .product-price {
+        width: 100%;
+    }
+
+    .action-button {
+        background-color: #D1E2C4;
+        color: #31352E;
+        border-radius: 4px;
+        padding: 8px;
+        border: none;
+    }
+
+     .action-button:hover {
+         background-color: #d6e8c9;
+     }
+
+     .out-of-stock {
+         font-style: italic;
+         color: gray;
+     }
+</style>
+

@@ -10,78 +10,190 @@
 
     if (ViewBag.hasOrders)
     {
-        for (var i = 0; i < ViewBag.orders.Count; i++)
-        {
+        <div class="order-catalogue">
+            @for (var i = 0; i < ViewBag.orders.Count; i++)
+            {
             string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
             int status;
-            <div>
-                <div>
-                    <p>Seller: @ViewBag.shopNames[i]</p>
-                </div>
-                <div>
-                    <img src="@ImageURL" width="200" height="200"/>
-                    <div>
-                        <div>
-                            <div>Order ID: @ViewBag.orderIds[i]</div>
-                            <div>@ViewBag.productNames[i]</div>
-                            <div>Quantity: @ViewBag.productQuantities[i] kg</div>
-                            <div>Unit Price:  @ViewBag.productPrices[i] per kg</div>
+            <div class="order-card">
+                <div class="shop-name">@ViewBag.shopNames[i]</div>
+                <div class="order-content">
+                    <img src="@ImageURL" />
+                    <div class="order-details">
+                        <div class="flexb">
+                            <div class="fourty column-wrap">
+                                <span style="width:100%">Order ID: @ViewBag.orderIds[i]</span>
+                                <span style="width:100%">@ViewBag.productNames[i]</span>
+                            </div>
+                            <div class="fourty">
+                                <div class="fifty"></div>
+                                <div>
+                                    <div>Quantity: @ViewBag.productQuantities[i] kg</div>
+                                    <div>Unit Price: @ViewBag.productPrices[i] per kg</div>
+                                    <div>Total Price: RM @Math.Round(ViewBag.totalPrices[i], 2).ToString()</div>
+
+                                    @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS)
+                                    {<div class="fifteen">
+                                            <form method="post" asp-action="ChangeOrderStatus" asp-controller="Customer">
+                                                <input type="hidden" name="OrderID" value="@ViewBag.orderIds[i]" />
+
+                                                @switch (@ViewBag.orderStatuses[i])
+                                                {
+                                                    case Status.IN_PROGRESS:
+                                                        status = 0;
+                                                        break;
+                                                    case Status.IN_TRANSIT:
+                                                        status = 1;
+                                                        break;
+                                                    case Status.RECEIVED:
+                                                        status = 2;
+                                                        break;
+                                                    case Status.CANCELLED:
+                                                        status = 3;
+                                                        break;
+                                                    default:
+                                                        status = 0;
+                                                        break;
+                                                }
+
+                                                Order Status:
+                                                <select name="SOrderStatus">
+                                                    <option value=0 selected disabled hidden>
+                                                        IN_PROGRESS
+                                                    </option>
+                                                    <option value=2>
+                                                        RECEIVED
+                                                    </option>
+                                                    <option value=3>
+                                                        CANCELLED
+                                                    </option>
+                                                </select>
+                                                <input type="submit" value="Change Status" class="action-button" />
+
+                                            </form>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="fifteen">Order Status: @ViewBag.orderStatuses[i]</div>
+
+                                    }
+                                </div>
+                            </div>
                         </div>
-                        <div>Total Price: RM @Math.Round(ViewBag.totalPrices[i], 2).ToString()</div>
-                        @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS) {
-
-                    <form method="post" asp-action="ChangeOrderStatus" asp-controller="Customer">
-                        <input type="hidden" name="OrderID" value="@ViewBag.orderIds[i]" />
-
-                        @switch (@ViewBag.orderStatuses[i])
-                        {
-                            case Status.IN_PROGRESS:
-                                status = 0;
-                                break;
-                            case Status.IN_TRANSIT:
-                                status = 1;
-                                break;
-                            case Status.RECEIVED:
-                                status = 2;
-                                break;
-                            case Status.CANCELLED:
-                                status = 3;
-                                break;
-                            default:
-                                status = 0;
-                                break;
-                        }
-                        tatatatata @ViewBag.orderStatuses[i]
-                        dadadadada @status
-                        <div>Order Status:</div>
-                        <select name="SOrderStatus">
-                            <option value=0 selected disabled hidden>
-                                IN_PROGRESS
-                            </option>
-                            <option value=2>
-                                RECEIVED
-                            </option>
-                            <option value=3>
-                                CANCELLED
-                            </option>
-                        </select>
-                        <input type="submit" value="Change Status" />
-                    </form>
-                        } else {
-                        <div>Order Status: @ViewBag.orderStatuses[i]</div>
-
-                        }
-
                     </div>
                 </div>
             </div>
-        }
+            }
+            
+        </div>
     }
     else
     {
         <p>You have not made any orders</p>
-        }
-
-
-
     }
+
+}
+
+
+<style>
+    h1 {
+        margin-top: 2rem;
+    }
+
+    body {
+        background-color: #EBEBE8;
+    }
+
+    img {
+        object-fit: cover;
+        width: 40%;
+        height: 200px;
+    }
+
+    .order-catelogue {
+        display: flex;
+        flex-wrap: wrap-reverse;
+        justify-content: space-around;
+        flex-direction: row-reverse;
+    }
+
+    .order-card {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0 2rem 0;
+        padding: 1.5rem;
+        padding-top: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        background-color: #fff;
+        flex-wrap: wrap;
+    }
+
+    .order-details {
+        width: 100%;
+        margin-left: 1rem;
+    }
+
+    .order-content {
+        display: flex;
+        width:100%;
+    }
+
+    .product-order {
+        width: 40%;
+        padding: 10px;
+    }
+
+    .gray {
+        color: gray;
+    }
+
+    .flexb {
+        display: flex;
+        flex-wrap: wrap;
+        height: 100%;
+    }
+
+    .fourty {
+        display: flex;
+        height: 40%;
+        width: 100%;
+    }
+
+    .column-wrap {
+        flex-wrap:wrap;
+    }
+
+    .twentyfive {
+        height: 25%;
+        width: 100%;
+    }
+
+    .fifteen {
+        height: 15%;
+        width: 100%;
+    }
+
+    .fifty {
+        width:50%
+    }
+
+    .shop-name {
+        width: 100%;
+        text-align: right;
+    }
+
+    .action-button {
+        background-color: #D1E2C4;
+        color: #31352E;
+        border-radius: 4px;
+        padding: 0 8px 0 8px;
+        border: none;
+    }
+
+     .action-button:hover {
+         background-color: #d6e8c9;
+     }
+</style>
