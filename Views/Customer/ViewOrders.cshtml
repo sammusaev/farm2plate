@@ -13,8 +13,9 @@
         <div class="order-catalogue">
             @for (var i = 0; i < ViewBag.orders.Count; i++)
             {
-            string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
-            int status;
+                string idname = $"changestatus-{@ViewBag.orderIds[i]}";
+                string ImageURL = $"https://{@ViewBag.BucketName}.s3.amazonaws.com/{@ViewBag.productImages[i]}";
+                int status;
             <div class="order-card">
                 <div class="shop-name">@ViewBag.shopNames[i]</div>
                 <div class="order-content">
@@ -33,7 +34,12 @@
                                     <div>Total Price: RM @Math.Round(ViewBag.totalPrices[i], 2).ToString()</div>
 
                                     @if (@ViewBag.orderStatuses[i] == Status.IN_PROGRESS)
-                                    {<div class="fifteen">
+                                    {
+                                        <script>
+                                            var select = document.getElementById(idname);
+                                            var value = select.options[select.selectedIndex].value;
+                                        </script>
+                                        <div class="fifteen">
                                             <form method="post" asp-action="ChangeOrderStatus" asp-controller="Customer">
                                                 <input type="hidden" name="OrderID" value="@ViewBag.orderIds[i]" />
 
@@ -57,7 +63,7 @@
                                                 }
 
                                                 Order Status:
-                                                <select name="SOrderStatus">
+                                                <select name="SOrderStatus" id="@idname">
                                                     <option value=0 selected disabled hidden>
                                                         IN_PROGRESS
                                                     </option>

@@ -30,7 +30,10 @@ namespace farm2plate.Models
         [ForeignKey("ShopID")]
         public int? ShopID { get; set; }
         public Shop? Shop { get; set; }
-        
+
+        public double SorderUnitPrice { get; set; }
+        public double SorderAmount { get; set; }
+
         [Required]
         public Status SOrderStatus { get; set; }
 

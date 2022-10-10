@@ -65,9 +65,9 @@ namespace farm2plate.Controllers
                 var shop = await _context.Shops.FindAsync(order.ShopID);
                 productNamesList.Add(product.ProductName);
                 productImagesList.Add(product.ProductImage);
-                productPricesList.Add(product.ProductPrice);
+                productPricesList.Add(order.SorderUnitPrice);
                 shopNamesList.Add(shop.ShopName);
-                totalPricesList.Add(order.ProductQuantity * product.ProductPrice);
+                totalPricesList.Add(order.SorderAmount);
             }
 
             var productNames = productNamesList.ToArray();
@@ -114,7 +114,7 @@ namespace farm2plate.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Order([Bind("ProductQuantity")] SOrder sorder, double? ProductQuantity, int? ProductID, int? ShopID, string ShopName, string ProductImage, string ProductName, double? ProductPrice)
+        public async Task<IActionResult> Order([Bind("ProductQuantity")] SOrder sorder, double? ProductQuantity, int? ProductID, int? ShopID, string ShopName, string ProductImage, double? ProductPrice)
         {
 
             System.Diagnostics.Debug.WriteLine($"!!! ProductQuantity {ProductQuantity} ProductID {ProductID} ShopID {ShopID} sorderUserID {sorder.UserID}");
@@ -126,13 +126,15 @@ namespace farm2plate.Controllers
             sorder.ShopID = (int)ShopID;
             sorder.UserID = user.Id;
             sorder.SOrderStatus = Status.IN_PROGRESS;
+            sorder.SorderAmount = (double)(ProductQuantity * ProductPrice);
+            sorder.SorderUnitPrice = (double)ProductPrice;
 
             ViewBag.ShopName = ShopName;
             ViewBag.ShopName = ShopName;
             ViewBag.BucketName = Environment.GetEnvironmentVariable("AWS_IMAGE_BUCKET_NAME");
             ViewBag.ProductImage = ProductImage;
             ViewBag.ProductPrice = ProductPrice;
-            ViewBag.TotalPrice = ProductQuantity * ProductPrice;    
+            ViewBag.TotalPrice = sorder.SorderAmount;    
 
             _context.SOrders.Add(sorder);
 
